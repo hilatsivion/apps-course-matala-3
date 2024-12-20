@@ -34,6 +34,8 @@ const loginUser = (username, password) => {
 };
 
 const LoginPage = () => {
+  console.log(JSON.parse(localStorage.getItem("users")));
+
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",

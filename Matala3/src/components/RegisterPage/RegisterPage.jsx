@@ -223,7 +223,7 @@ const RegisterPage = () => {
     const convertImageToBase64 = (file) => {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
+        reader.onload = () => resolve(reader.result); // Base64 string
         reader.onerror = (error) => reject(error);
         reader.readAsDataURL(file);
       });
@@ -244,7 +244,7 @@ const RegisterPage = () => {
 
     const user = {
       ...formData,
-      profilePicture: base64Image,
+      profilePicture: base64Image, // Replace file object with Base64 string
     };
 
     delete user.confirmPassword;
@@ -256,7 +256,21 @@ const RegisterPage = () => {
     });
 
     if (result.success) {
-      localStorage.setItem("users", JSON.stringify(user));
+      setFormData({
+        username: "",
+        password: "",
+        confirmPassword: "",
+        profilePicture: null,
+        firstName: "",
+        lastName: "",
+        email: "",
+        dateOfBirth: "",
+        city: "",
+        street: "",
+        houseNumber: "",
+        favoriteWebSiteGameLink: "",
+      });
+      setAlerts({});
       navigate("/login-page");
     }
   };
