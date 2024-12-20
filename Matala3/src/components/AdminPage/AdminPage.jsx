@@ -4,36 +4,32 @@ import UserTable from "./UserTable.jsx";
 import "./admin.css";
 
 function AdminPage() {
-  const [users, setUsers] = useState([
-    // TODO: we need to get the users json
-    {
-      email: "hila@gmail.com",
-      username: "Matthew Wilson",
-      fullName: "Blah Blah",
-      birthdate: "06-03-2021",
-      address: "123 Street, City",
-      profileImage: "https://via.placeholder.com/40",
-    },
-    {
-      email: "sarah@gmail.com",
-      username: "Sarah Martin",
-      fullName: "Sarah Martin",
-      birthdate: "12-01-2022",
-      address: "456 Avenue, City",
-      profileImage: "https://via.placeholder.com/40",
-    },
-  ]);
+  // Initialize users from localStorage or set as an empty array
+  const [users, setUsers] = useState(() => {
+    const storedUsers = localStorage.getItem("users");
+    return storedUsers ? JSON.parse(storedUsers) : [];
+  });
 
-  // Admin deletes a user from the "database"
-  const handleDelete = (email) => {
-    // TODO: delete from view & delete from our data
-    setUsers(users.filter((user) => user.email !== email));
+  // Update localStorage whenever users state changes
+  const updateLocalStorage = (updatedUsers) => {
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
+    setUsers(updatedUsers);
   };
 
-  // Admin edits the user info
-  const handleEdit = (email) => {
-    console.log("Edit user with email:", email);
-    // TODO: Add functionality for editing the user
+  const handleDelete = (email) => {
+    const updatedUsers = users.filter((user) => user.email !== email);
+    updateLocalStorage(updatedUsers);
+  };
+
+  const handleEdit = (updatedUser) => {
+    const updatedUsers = users.map((user) =>
+      user.email === updatedUser.email ? updatedUser : user
+    );
+    updateLocalStorage(updatedUsers);
+  };
+
+  const handleAlert = (message) => {
+    alert(message);
   };
 
   return (
@@ -41,7 +37,12 @@ function AdminPage() {
       <Navbar />
       <div className="admin-container">
         <h1>Admin Dashboard</h1>
-        <UserTable users={users} onEdit={handleEdit} onDelete={handleDelete} />
+        <UserTable
+          users={users}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          onAlert={handleAlert}
+        />
       </div>
     </div>
   );
