@@ -197,9 +197,12 @@ const RegisterPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const isValid = Object.keys(formData).every((key) =>
-      validateField(key, formData[key])
-    );
+    const isValid = Object.keys(formData).every((key) => {
+      if (key === "profilePicture" && formData.profilePicture instanceof File) {
+        return validateField(key, formData.profilePicture.name);
+      }
+      return validateField(key, formData[key]);
+    });
 
     if (!isValid) {
       setGlobalAlert({
@@ -209,10 +212,18 @@ const RegisterPage = () => {
       return;
     }
 
+    // If valid, convert the file to a URL for storage
+    const updatedFormData = { ...formData };
+    if (formData.profilePicture instanceof File) {
+      updatedFormData.profilePicture = URL.createObjectURL(
+        formData.profilePicture
+      );
+    }
+
     const user = {
-      ...formData,
-      profilePicture: formData.profilePicture,
+      ...updatedFormData,
     };
+    console.log("User:", user);
 
     delete user.confirmPassword;
 
@@ -248,9 +259,9 @@ const RegisterPage = () => {
     let fieldValue = value;
 
     if (type === "file" && files[0]) {
-      fieldValue = URL.createObjectURL(files[0]);
+      fieldValue = files[0];
 
-      validateField(name, files[0].name);
+      validateField(name, fieldValue.name);
     } else {
       validateField(name, fieldValue);
     }
