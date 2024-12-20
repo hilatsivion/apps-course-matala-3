@@ -170,8 +170,12 @@ const RegisterPage = () => {
         break;
     }
 
-    setAlerts({ ...alerts, [name]: alertMessage });
-    return alertMessage === ""; // Return whether the field is valid
+    setAlerts((prevAlerts) => ({
+      ...prevAlerts,
+      [name]: alertMessage,
+    }));
+
+    return alertMessage === "";
   };
 
   const handleChange = (e) => {

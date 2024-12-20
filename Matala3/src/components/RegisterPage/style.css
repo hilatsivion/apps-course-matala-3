@@ -31,6 +31,7 @@
 
 h1 {
   font-size: 2rem;
+  margin-bottom: 0.5rem;
   color: #333;
 }
 
@@ -94,7 +95,6 @@ input {
   text-decoration: none;
   font-weight: bold;
 }
-
 .autocomplete-dropdown {
   position: absolute;
   background-color: white;
@@ -118,4 +118,34 @@ input {
 
 .autocomplete-item:hover {
   background-color: #f0f0f0;
+}
+
+.alert {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #f44336;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  animation: fadeInOut 3s forwards;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
