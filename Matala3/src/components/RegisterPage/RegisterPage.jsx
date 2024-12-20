@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import UserAlert from "../UserAlert/UserAlert";
+import UserAlert from "../UserAlert/UserAlert.jsx";
 import registerImage from "../../../assets/images/registar-image.png";
 import "./style.css";
 import "../../general.css";
@@ -92,12 +92,15 @@ const RegisterPage = () => {
 
   const validateField = (name, value) => {
     let alertMessage = "";
+    const users = JSON.parse(localStorage.getItem("users")) || [];
 
     switch (name) {
       case "username":
         if (!/^[A-Za-z0-9!@#$%^&*()_+=-]{1,60}$/.test(value)) {
           alertMessage =
             "Username must be up to 60 characters and contain only letters, numbers, and special characters.";
+        } else if (users.find((u) => u.username === value)) {
+          alertMessage = "Username already registered!";
         }
         break;
 
@@ -122,6 +125,8 @@ const RegisterPage = () => {
         if (value && !/\.(jpg|jpeg)$/i.test(value.name)) {
           alertMessage = "Only JPG or JPEG images are allowed.";
         }
+        console.log(value);
+
         break;
 
       case "firstName":
@@ -137,6 +142,8 @@ const RegisterPage = () => {
           !value.endsWith(".com")
         ) {
           alertMessage = "Email must be valid and end with .com.";
+        } else if (users.find((u) => u.email === value)) {
+          alertMessage = "Email already registered!";
         }
         break;
 
@@ -197,7 +204,7 @@ const RegisterPage = () => {
     validateField(name, fieldValue);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const isValid = Object.keys(formData).every((key) =>
@@ -212,25 +219,33 @@ const RegisterPage = () => {
       return;
     }
 
-    const user = { ...formData };
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const email = users.find((u) => u.email === user.email);
-    if (email) {
-      setGlobalAlert({
-        message: "Email already registered!",
-        type: "error",
+    // Convert image to Base64 if profilePicture exists
+    const convertImageToBase64 = (file) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+        reader.readAsDataURL(file);
       });
-      return;
+    };
+
+    let base64Image = null;
+    if (formData.profilePicture) {
+      try {
+        base64Image = await convertImageToBase64(formData.profilePicture);
+      } catch (error) {
+        setGlobalAlert({
+          message: "Failed to process the image. Please try again. " + error,
+          type: "error",
+        });
+        return;
+      }
     }
 
-    const username = users.find((u) => u.username === user.username);
-    if (username) {
-      setGlobalAlert({
-        message: "Username already registered!",
-        type: "error",
-      });
-      return;
-    }
+    const user = {
+      ...formData,
+      profilePicture: base64Image,
+    };
 
     delete user.confirmPassword;
 
@@ -241,20 +256,7 @@ const RegisterPage = () => {
     });
 
     if (result.success) {
-      setFormData({
-        username: "",
-        password: "",
-        confirmPassword: "",
-        profilePicture: null,
-        firstName: "",
-        lastName: "",
-        email: "",
-        dateOfBirth: "",
-        city: "",
-        street: "",
-        houseNumber: "",
-      });
-      setAlerts({});
+      localStorage.setItem("users", JSON.stringify(user));
       navigate("/login-page");
     }
   };

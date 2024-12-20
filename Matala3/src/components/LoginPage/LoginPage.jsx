@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import loginImage from "../../../assets/images/login-image.png";
-import UserAlert from "../UserAlert/UserAlert";
+import UserAlert from "../UserAlert/UserAlert.jsx";
 import "./style.css";
 import "../../general.css";
 
@@ -12,10 +12,24 @@ const loginUser = (username, password) => {
   );
 
   if (user) {
-    sessionStorage.setItem("currentUser", JSON.stringify(user));
-    return { success: true, message: "Login successful!" };
+    return {
+      success: true,
+      user, // Return the full user object
+      message: "Login successful!",
+    };
+  } else if (username === "admin" && password === "ad12343211ad") {
+    // Admin credentials
+    return {
+      success: true,
+      user: { username: "admin", role: "admin" }, // Provide necessary details for the admin
+      message: "Admin login successful!",
+    };
   } else {
-    return { success: false, message: "Invalid username or password!" };
+    return {
+      success: false,
+      user: null, // Return null for user when login fails
+      message: "Invalid username or password!",
+    };
   }
 };
 
@@ -94,12 +108,13 @@ const LoginPage = () => {
         const currentUser = {
           ...result.user,
         };
-        localStorage.setItem("currentUser", JSON.stringify(currentUser));
+        console.log("Current User:", currentUser);
+        sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
 
         if (result.user?.username === "admin") {
           navigate("/Sysadmin");
         } else {
-          navigate("/Profile");
+          navigate("/profile-page");
         }
       }
     }
