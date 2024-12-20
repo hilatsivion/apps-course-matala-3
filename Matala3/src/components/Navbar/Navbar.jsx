@@ -28,8 +28,10 @@ function Navbar() {
   return (
     <header className="navbar">
       <div className="logo">
-        <img src={logo} alt="logo" />
-        <h1>Matala3</h1>
+        <Link to="/" className="logo">
+          <img src={logo} alt="logo" />
+          <h1>Matala3</h1>
+        </Link>
       </div>
       <div className="buttons">
         {!isLoggedIn ? (
