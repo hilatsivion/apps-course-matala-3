@@ -4,7 +4,7 @@ import logo from "../../../assets/images/logo.png";
 import "./style.css";
 
 function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   return (
     <header className="navbar">
@@ -30,7 +30,9 @@ function Navbar() {
                 alt="Profile"
                 className="profile-image"
               />
-              <h4 className="profile-text">Profile</h4>
+              <h4 className="profile-text">
+                <Link to="/profile-page">Profile</Link>
+              </h4>
             </div>
           </div>
         )}
