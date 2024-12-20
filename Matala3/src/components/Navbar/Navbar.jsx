@@ -36,12 +36,13 @@ function Navbar() {
       <div className="buttons">
         {!isLoggedIn ? (
           <>
-            <button className="btn create-account">
-              <Link to="/register-page">Create Account</Link>
-            </button>
-            <button className="btn login">
-              <Link to="/login-page">Log in</Link>
-            </button>
+            <Link to="/register-page">
+              <button className="btn create-account">Create Account</button>
+            </Link>
+
+            <Link to="/login-page">
+              <button className="btn login">Log in</button>
+            </Link>
           </>
         ) : (
           <div className="profile">

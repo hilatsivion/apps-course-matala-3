@@ -292,190 +292,197 @@ const RegisterPage = () => {
         <div className="register-form">
           <h1>Sign Up</h1>
           <form onSubmit={handleSubmit}>
-            {/* Username */}
-            <div>
-              <label>Username</label>
-              <input
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                placeholder="Enter your username"
-                required
-              />
-              {alerts.username && (
-                <small className="alert">{alerts.username}</small>
-              )}
+            <div className="flex">
+              {/* First Name */}
+              <div className="form-group">
+                <label>First Name</label>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  placeholder="Enter your first name"
+                  required
+                />
+                {alerts.firstName && (
+                  <small className="alert">{alerts.firstName}</small>
+                )}
+              </div>
+
+              {/* Last Name */}
+              <div className="form-group">
+                <label>Last Name</label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  placeholder="Enter your last name"
+                  required
+                />
+                {alerts.lastName && (
+                  <small className="alert">{alerts.lastName}</small>
+                )}
+              </div>
+            </div>
+            <div className="flex">
+              {/* Username */}
+              <div className="form-group">
+                <label>Username</label>
+                <input
+                  type="text"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  placeholder="Enter your username"
+                  required
+                />
+                {alerts.username && (
+                  <small className="alert">{alerts.username}</small>
+                )}
+              </div>
+              {/* Email */}
+              <div className="form-group">
+                <label>Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="example@gmail.com"
+                  required
+                />
+                {alerts.email && (
+                  <small className="alert">{alerts.email}</small>
+                )}
+              </div>
+            </div>
+            <div className="flex">
+              {/* Password */}
+              <div className="form-group">
+                <label>Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="••••••••••••"
+                  required
+                />
+                {alerts.password && (
+                  <small className="alert">{alerts.password}</small>
+                )}
+              </div>
+
+              {/* Confirm Password */}
+              <div className="form-group">
+                <label>Confirm Password</label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="••••••••••••"
+                  required
+                />
+                {alerts.confirmPassword && (
+                  <small className="alert">{alerts.confirmPassword}</small>
+                )}
+              </div>
             </div>
 
-            {/* Password */}
-            <div>
-              <label>Password</label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="••••••••••••"
-                required
-              />
-              {alerts.password && (
-                <small className="alert">{alerts.password}</small>
-              )}
+            <div className="flex">
+              {/* Date of Birth */}
+              <div className="form-group">
+                <label>Date of Birth</label>
+                <input
+                  type="date"
+                  name="dateOfBirth"
+                  value={formData.dateOfBirth}
+                  onChange={handleChange}
+                  required
+                />
+                {alerts.dateOfBirth && (
+                  <small className="alert">{alerts.dateOfBirth}</small>
+                )}
+              </div>
+              {/* Profile Picture */}
+              <div className="form-group">
+                <label>Profile Picture</label>
+                <input
+                  type="file"
+                  name="profilePicture"
+                  onChange={handleChange}
+                  required
+                />
+                {alerts.profilePicture && (
+                  <small className="alert">{alerts.profilePicture}</small>
+                )}
+              </div>
             </div>
+            <div className="flex">
+              {/* City */}
+              <div className="form-group" style={{ position: "relative" }}>
+                <label>City</label>
+                <input
+                  type="text"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleCityInput}
+                  placeholder="Enter your city"
+                  autoComplete="off"
+                  required
+                />
+                {showDropdown && filteredCities.length > 0 && (
+                  <ul className="autocomplete-dropdown">
+                    {filteredCities.map((city, index) => (
+                      <li
+                        key={index}
+                        onClick={() => handleCitySelect(city)}
+                        className="autocomplete-item"
+                      >
+                        {city}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {alerts.city && <small className="alert">{alerts.city}</small>}
+              </div>
 
-            {/* Confirm Password */}
-            <div>
-              <label>Confirm Password</label>
-              <input
-                type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                placeholder="••••••••••••"
-                required
-              />
-              {alerts.confirmPassword && (
-                <small className="alert">{alerts.confirmPassword}</small>
-              )}
-            </div>
+              {/* Street */}
+              <div className="form-group">
+                <label>Street</label>
+                <input
+                  type="text"
+                  name="street"
+                  value={formData.street}
+                  onChange={handleChange}
+                  placeholder="Enter your street"
+                  required
+                />
+                {alerts.street && (
+                  <small className="alert">{alerts.street}</small>
+                )}
+              </div>
 
-            {/* Profile Picture */}
-            <div>
-              <label>Profile Picture</label>
-              <input
-                type="file"
-                name="profilePicture"
-                onChange={handleChange}
-                required
-              />
-              {alerts.profilePicture && (
-                <small className="alert">{alerts.profilePicture}</small>
-              )}
-            </div>
-
-            {/* First Name */}
-            <div>
-              <label>First Name</label>
-              <input
-                type="text"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                placeholder="Enter your first name"
-                required
-              />
-              {alerts.firstName && (
-                <small className="alert">{alerts.firstName}</small>
-              )}
-            </div>
-
-            {/* Last Name */}
-            <div>
-              <label>Last Name</label>
-              <input
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                placeholder="Enter your last name"
-                required
-              />
-              {alerts.lastName && (
-                <small className="alert">{alerts.lastName}</small>
-              )}
-            </div>
-
-            {/* Email */}
-            <div>
-              <label>Email</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="example@gmail.com"
-                required
-              />
-              {alerts.email && <small className="alert">{alerts.email}</small>}
-            </div>
-
-            {/* Date of Birth */}
-            <div>
-              <label>Date of Birth</label>
-              <input
-                type="date"
-                name="dateOfBirth"
-                value={formData.dateOfBirth}
-                onChange={handleChange}
-                required
-              />
-              {alerts.dateOfBirth && (
-                <small className="alert">{alerts.dateOfBirth}</small>
-              )}
-            </div>
-
-            {/* City */}
-            <div style={{ position: "relative" }}>
-              <label>City</label>
-              <input
-                type="text"
-                name="city"
-                value={formData.city}
-                onChange={handleCityInput}
-                placeholder="Enter your city"
-                autoComplete="off"
-                required
-              />
-              {showDropdown && filteredCities.length > 0 && (
-                <ul className="autocomplete-dropdown">
-                  {filteredCities.map((city, index) => (
-                    <li
-                      key={index}
-                      onClick={() => handleCitySelect(city)}
-                      className="autocomplete-item"
-                    >
-                      {city}
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {alerts.city && <small className="alert">{alerts.city}</small>}
-            </div>
-
-            {/* Street */}
-            <div>
-              <label>Street</label>
-              <input
-                type="text"
-                name="street"
-                value={formData.street}
-                onChange={handleChange}
-                placeholder="Enter your street"
-                required
-              />
-              {alerts.street && (
-                <small className="alert">{alerts.street}</small>
-              )}
-            </div>
-
-            {/* House Number */}
-            <div>
-              <label>House Number</label>
-              <input
-                type="number"
-                name="houseNumber"
-                value={formData.houseNumber}
-                onChange={handleChange}
-                placeholder="Enter your house number"
-                required
-              />
-              {alerts.houseNumber && (
-                <small className="alert">{alerts.houseNumber}</small>
-              )}
+              {/* House Number */}
+              <div className="form-group">
+                <label>House Number</label>
+                <input
+                  type="number"
+                  name="houseNumber"
+                  value={formData.houseNumber}
+                  onChange={handleChange}
+                  placeholder="Enter your house number"
+                  required
+                />
+                {alerts.houseNumber && (
+                  <small className="alert">{alerts.houseNumber}</small>
+                )}
+              </div>
             </div>
             {/* Link To A Favorite Website Game */}
-            <div>
+            <div className="form-group">
               <label>Link To Your Favorite Game</label>
               <input
                 type="text"
