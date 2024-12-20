@@ -1,10 +1,225 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import registerImage from "../../../assets/images/registar-image.png";
 import "./style.css";
 import "../../general.css";
 
+const cities = [
+  "Jerusalem",
+  "Tel Aviv",
+  "Haifa",
+  "Rishon Lezion",
+  "Petah Tikva",
+  "Ashdod",
+  "Netanya",
+  "Beersheba",
+  "Holon",
+  "Bnei Brak",
+  "Ramat Gan",
+  "Ashkelon",
+  "Bat Yam",
+  "Rehovot",
+  "Herzliya",
+  "Kfar Saba",
+  "Hadera",
+  "Modiin-Maccabim-Reut",
+  "Nazareth",
+  "Lod",
+  "Raanana",
+  "Acre (Akko)",
+  "Nahariya",
+  "Kiryat Gat",
+  "Eilat",
+  "Kiryat Motzkin",
+  "Kiryat Ono",
+  "Kiryat Yam",
+  "Tiberias",
+  "Kiryat Shmona",
+  "Sderot",
+];
+
+const registerUser = (user) => {
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  if (users.some((u) => u.email === user.email)) {
+    alert("Email already registered!");
+    return;
+  }
+  console.log(user);
+  users.push(user);
+  localStorage.setItem("users", JSON.stringify(users));
+  alert("User registered successfully!");
+};
+
 const RegisterPage = () => {
+  const [filteredCities, setFilteredCities] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [alerts, setAlerts] = useState({});
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    confirmPassword: "",
+    profilePicture: null,
+    firstName: "",
+    lastName: "",
+    email: "",
+    dateOfBirth: "",
+    city: "",
+    street: "",
+    houseNumber: "",
+  });
+
+  const handleCityInput = (e) => {
+    const value = e.target.value;
+    setFormData({ ...formData, city: value });
+
+    if (value.length > 0) {
+      const matches = cities.filter((city) =>
+        city.toLowerCase().startsWith(value.toLowerCase())
+      );
+      setFilteredCities(matches);
+      setShowDropdown(true);
+    } else {
+      setShowDropdown(false);
+    }
+  };
+
+  const handleCitySelect = (city) => {
+    setFormData({ ...formData, city });
+    setShowDropdown(false);
+  };
+
+  const validateField = (name, value) => {
+    let alertMessage = "";
+
+    switch (name) {
+      case "username":
+        if (!/^[A-Za-z0-9!@#$%^&*()_+=-]{1,60}$/.test(value)) {
+          alertMessage =
+            "Username must be up to 60 characters and contain only letters, numbers, and special characters.";
+        }
+        break;
+
+      case "password":
+        if (
+          !/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{7,12}$/.test(
+            value
+          )
+        ) {
+          alertMessage =
+            "Password must be 7-12 characters long, include a number, a special character, and an uppercase letter.";
+        }
+        break;
+
+      case "confirmPassword":
+        if (value !== formData.password) {
+          alertMessage = "Passwords do not match.";
+        }
+        break;
+
+      case "profilePicture":
+        if (value && !/\.(jpg|jpeg)$/i.test(value.name)) {
+          alertMessage = "Only JPG or JPEG images are allowed.";
+        }
+        break;
+
+      case "firstName":
+      case "lastName":
+        if (!/^[A-Za-z]+$/.test(value)) {
+          alertMessage = "Only letters are allowed.";
+        }
+        break;
+
+      case "email":
+        if (
+          !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(value) ||
+          !value.endsWith(".com")
+        ) {
+          alertMessage = "Email must be valid and end with .com.";
+        }
+        break;
+
+      case "dateOfBirth": {
+        // Fix: Wrap the case block in curly braces
+        const today = new Date();
+        const selectedDate = new Date(value);
+        if (selectedDate > today || selectedDate.getFullYear() < 1900) {
+          alertMessage = "Enter a valid date of birth.";
+        }
+        break;
+      }
+
+      case "city":
+        if (value.length < 1) {
+          alertMessage = "Please select a valid city.";
+        }
+        break;
+
+      case "street":
+        if (!/^[א-ת\s]+$/.test(value)) {
+          alertMessage = "Street name must be in Hebrew.";
+        }
+        break;
+
+      case "houseNumber":
+        if (value <= 0) {
+          alertMessage = "House number must be a positive number.";
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    setAlerts({ ...alerts, [name]: alertMessage });
+    return alertMessage === ""; // Return whether the field is valid
+  };
+
+  const handleChange = (e) => {
+    const { name, value, type, files } = e.target;
+    const fieldValue = type === "file" ? files[0] : value;
+
+    setFormData({
+      ...formData,
+      [name]: fieldValue,
+    });
+
+    validateField(name, fieldValue);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const isValid = Object.keys(formData).every((key) =>
+      validateField(key, formData[key])
+    );
+
+    if (!isValid) {
+      alert("Please fix the errors before submitting.");
+      return;
+    }
+
+    const user = { ...formData };
+    delete user.confirmPassword;
+
+    registerUser(user);
+
+    setFormData({
+      username: "",
+      password: "",
+      confirmPassword: "",
+      profilePicture: null,
+      firstName: "",
+      lastName: "",
+      email: "",
+      dateOfBirth: "",
+      city: "",
+      street: "",
+      houseNumber: "",
+    });
+
+    setAlerts({});
+  };
+
   return (
     <div className="main">
       <div className="register-container">
@@ -13,80 +228,172 @@ const RegisterPage = () => {
         </div>
         <div className="register-form">
           <h1>Sign Up</h1>
-          <p>
-            Let’s get you all set up so you can access your personal account.
-          </p>
-          <form>
+          <form onSubmit={handleSubmit}>
             {/* Username */}
             <div>
               <label>Username</label>
-              <input type="text" placeholder="Enter your username" required />
+              <input
+                type="text"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                placeholder="Enter your username"
+                required
+              />
+              {alerts.username && (
+                <small className="alert">{alerts.username}</small>
+              )}
             </div>
 
             {/* Password */}
             <div>
               <label>Password</label>
-              <input type="password" placeholder="••••••••••••" required />
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="••••••••••••"
+                required
+              />
+              {alerts.password && (
+                <small className="alert">{alerts.password}</small>
+              )}
             </div>
 
             {/* Confirm Password */}
             <div>
               <label>Confirm Password</label>
-              <input type="password" placeholder="••••••••••••" required />
+              <input
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="••••••••••••"
+                required
+              />
+              {alerts.confirmPassword && (
+                <small className="alert">{alerts.confirmPassword}</small>
+              )}
             </div>
 
-            {/* Upload Image */}
+            {/* Profile Picture */}
             <div>
               <label>Profile Picture</label>
-              <input type="file" required />
+              <input
+                type="file"
+                name="profilePicture"
+                onChange={handleChange}
+                required
+              />
+              {alerts.profilePicture && (
+                <small className="alert">{alerts.profilePicture}</small>
+              )}
             </div>
 
-            {/* First Name & Last Name */}
-            <div className="input-group">
-              <div>
-                <label>First Name</label>
-                <input
-                  type="text"
-                  placeholder="Enter your first name"
-                  required
-                />
-              </div>
-              <div>
-                <label>Last Name</label>
-                <input
-                  type="text"
-                  placeholder="Enter your last name"
-                  required
-                />
-              </div>
+            {/* First Name */}
+            <div>
+              <label>First Name</label>
+              <input
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                placeholder="Enter your first name"
+                required
+              />
+              {alerts.firstName && (
+                <small className="alert">{alerts.firstName}</small>
+              )}
+            </div>
+
+            {/* Last Name */}
+            <div>
+              <label>Last Name</label>
+              <input
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                placeholder="Enter your last name"
+                required
+              />
+              {alerts.lastName && (
+                <small className="alert">{alerts.lastName}</small>
+              )}
             </div>
 
             {/* Email */}
             <div>
               <label>Email</label>
-              <input type="email" placeholder="example@gmail.com" required />
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="example@gmail.com"
+                required
+              />
+              {alerts.email && <small className="alert">{alerts.email}</small>}
             </div>
 
             {/* Date of Birth */}
             <div>
               <label>Date of Birth</label>
-              <input type="date" required />
+              <input
+                type="date"
+                name="dateOfBirth"
+                value={formData.dateOfBirth}
+                onChange={handleChange}
+                required
+              />
+              {alerts.dateOfBirth && (
+                <small className="alert">{alerts.dateOfBirth}</small>
+              )}
             </div>
 
-            {/* City & Street Name */}
-            <div className="input-group">
-              <div>
-                <label>City</label>
-                <input type="text" placeholder="Enter your city" required />
-              </div>
-              <div>
-                <label>Street Name</label>
-                <input
-                  type="text"
-                  placeholder="Enter your street name"
-                  required
-                />
-              </div>
+            {/* City */}
+            <div style={{ position: "relative" }}>
+              <label>City</label>
+              <input
+                type="text"
+                name="city"
+                value={formData.city}
+                onChange={handleCityInput}
+                placeholder="Enter your city"
+                autoComplete="off"
+                required
+              />
+              {showDropdown && filteredCities.length > 0 && (
+                <ul className="autocomplete-dropdown">
+                  {filteredCities.map((city, index) => (
+                    <li
+                      key={index}
+                      onClick={() => handleCitySelect(city)}
+                      className="autocomplete-item"
+                    >
+                      {city}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {alerts.city && <small className="alert">{alerts.city}</small>}
+            </div>
+
+            {/* Street */}
+            <div>
+              <label>Street</label>
+              <input
+                type="text"
+                name="street"
+                value={formData.street}
+                onChange={handleChange}
+                placeholder="Enter your street"
+                required
+              />
+              {alerts.street && (
+                <small className="alert">{alerts.street}</small>
+              )}
             </div>
 
             {/* House Number */}
@@ -94,17 +401,21 @@ const RegisterPage = () => {
               <label>House Number</label>
               <input
                 type="number"
+                name="houseNumber"
+                value={formData.houseNumber}
+                onChange={handleChange}
                 placeholder="Enter your house number"
                 required
               />
+              {alerts.houseNumber && (
+                <small className="alert">{alerts.houseNumber}</small>
+              )}
             </div>
 
             {/* Submit Button */}
             <button type="submit" className="btn-primary">
               Create Account
             </button>
-
-            {/* Link to Login */}
             <p className="login-link">
               Already have an account? <Link to="/login-page">Login</Link>
             </p>
