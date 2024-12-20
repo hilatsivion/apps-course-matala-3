@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import UserAlert from "../UserAlert/UserAlert.jsx";
+import UserAlert from "../Alert/UserAlert.jsx";
 import registerImage from "../../../assets/images/registar-image.png";
 import "./style.css";
 import "../../general.css";
@@ -122,11 +122,13 @@ const RegisterPage = () => {
         break;
 
       case "profilePicture":
-        if (value && !/\.(jpg|jpeg)$/i.test(value.name)) {
-          alertMessage = "Only JPG or JPEG images are allowed.";
+        if (value) {
+          // Extract the file name and validate the extension
+          const fileName = value instanceof File ? value.name : value;
+          if (!/\.(jpg|jpeg)$/i.test(fileName)) {
+            alertMessage = "Only JPG or JPEG images are allowed.";
+          }
         }
-        console.log(value);
-
         break;
 
       case "firstName":
@@ -192,19 +194,7 @@ const RegisterPage = () => {
     return alertMessage === "";
   };
 
-  const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
-    const fieldValue = type === "file" ? files[0] : value;
-
-    setFormData({
-      ...formData,
-      [name]: fieldValue,
-    });
-
-    validateField(name, fieldValue);
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     const isValid = Object.keys(formData).every((key) =>
@@ -219,32 +209,9 @@ const RegisterPage = () => {
       return;
     }
 
-    // Convert image to Base64 if profilePicture exists
-    const convertImageToBase64 = (file) => {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result); // Base64 string
-        reader.onerror = (error) => reject(error);
-        reader.readAsDataURL(file);
-      });
-    };
-
-    let base64Image = null;
-    if (formData.profilePicture) {
-      try {
-        base64Image = await convertImageToBase64(formData.profilePicture);
-      } catch (error) {
-        setGlobalAlert({
-          message: "Failed to process the image. Please try again. " + error,
-          type: "error",
-        });
-        return;
-      }
-    }
-
     const user = {
       ...formData,
-      profilePicture: base64Image, // Replace file object with Base64 string
+      profilePicture: formData.profilePicture,
     };
 
     delete user.confirmPassword;
@@ -273,6 +240,26 @@ const RegisterPage = () => {
       setAlerts({});
       navigate("/login-page");
     }
+  };
+
+  const handleChange = (e) => {
+    const { name, value, type, files } = e.target;
+
+    let fieldValue = value;
+
+    if (type === "file" && files[0]) {
+      fieldValue = URL.createObjectURL(files[0]);
+
+      validateField(name, files[0].name);
+    } else {
+      validateField(name, fieldValue);
+    }
+
+    // Update formData
+    setFormData({
+      ...formData,
+      [name]: fieldValue,
+    });
   };
 
   return (

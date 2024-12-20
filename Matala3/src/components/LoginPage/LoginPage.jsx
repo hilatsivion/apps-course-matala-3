@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import loginImage from "../../../assets/images/login-image.png";
-import UserAlert from "../UserAlert/UserAlert.jsx";
+import UserAlert from "../Alert/UserAlert";
 import "./style.css";
 import "../../general.css";
 
