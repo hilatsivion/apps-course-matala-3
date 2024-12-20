@@ -20,7 +20,6 @@ function UserRow({ user, onEdit, onDelete, onAlert }) {
     if (isValid) {
       setIsEditing(false);
       onEdit(editedUser);
-      onAlert("User updated successfully!");
     } else {
       onAlert("Validation failed. Please fix the errors before saving.");
     }
@@ -76,6 +75,14 @@ function UserRow({ user, onEdit, onDelete, onAlert }) {
 
   return (
     <tr>
+      <td>
+        <img
+          src={user.profilePicture}
+          alt="Profile"
+          className="profile-image"
+          style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+        />
+      </td>
       {isEditing ? (
         <>
           <td>
@@ -88,17 +95,25 @@ function UserRow({ user, onEdit, onDelete, onAlert }) {
           </td>
           <td>
             <input
-              type="email"
-              name="email"
-              value={editedUser.email}
+              type="text"
+              name="firstName"
+              value={editedUser.firstName}
               onChange={handleChange}
             />
           </td>
           <td>
             <input
               type="text"
-              name="firstName"
-              value={editedUser.firstName}
+              name="lastName"
+              value={editedUser.lastName}
+              onChange={handleChange}
+            />
+          </td>
+          <td>
+            <input
+              type="email"
+              name="email"
+              value={editedUser.email}
               onChange={handleChange}
             />
           </td>
@@ -149,8 +164,9 @@ function UserRow({ user, onEdit, onDelete, onAlert }) {
       ) : (
         <>
           <td>{user.username}</td>
-          <td>{user.email}</td>
           <td>{user.firstName}</td>
+          <td>{user.lastName}</td>
+          <td>{user.email}</td>
           <td>{user.dateOfBirth}</td>
           <td>{user.city}</td>
           <td>{user.street}</td>
@@ -174,9 +190,11 @@ function UserRow({ user, onEdit, onDelete, onAlert }) {
 
 UserRow.propTypes = {
   user: PropTypes.shape({
+    profilePicture: PropTypes.string.isRequired,
     username: PropTypes.string.isRequired,
-    email: PropTypes.string.isRequired,
     firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
     dateOfBirth: PropTypes.string.isRequired,
     city: PropTypes.string.isRequired,
     street: PropTypes.string.isRequired,
