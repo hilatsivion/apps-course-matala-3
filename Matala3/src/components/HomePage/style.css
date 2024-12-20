@@ -18,58 +18,6 @@ body {
   align-items: center;
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 0;
-}
-
-.logo-dot {
-  width: 12px;
-  height: 12px;
-  background-color: #ff69b4; /* Pinkish color */
-  border-radius: 50%;
-  margin-right: 8px;
-}
-
-.logo h1 {
-  font-size: 1.5rem;
-  color: #333;
-}
-
-.buttons {
-  display: flex;
-  gap: 1rem;
-}
-
-.btn {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  border: 2px solid #4f46e5; /* Blue border */
-  background-color: transparent;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn a {
-  color: white;
-}
-
-.btn.login a {
-  color: #4f46e5;
-}
-
-.btn.create-account {
-  background-color: #4f46e5;
-}
-
-.btn.login:hover {
-  background-color: #e0e7ff;
-}
-
 .welcome-text h1.title-header {
   font-size: 6rem;
   line-height: 7rem;
