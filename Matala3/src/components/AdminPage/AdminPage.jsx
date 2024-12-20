@@ -4,13 +4,11 @@ import UserTable from "./UserTable.jsx";
 import "./admin.css";
 
 function AdminPage() {
-  // Initialize users from localStorage or set as an empty array
   const [users, setUsers] = useState(() => {
     const storedUsers = localStorage.getItem("users");
     return storedUsers ? JSON.parse(storedUsers) : [];
   });
 
-  // Update localStorage whenever users state changes
   const updateLocalStorage = (updatedUsers) => {
     localStorage.setItem("users", JSON.stringify(updatedUsers));
     setUsers(updatedUsers);
