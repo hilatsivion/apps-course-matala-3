@@ -139,7 +139,6 @@ const RegisterPage = () => {
         break;
 
       case "dateOfBirth": {
-        // Fix: Wrap the case block in curly braces
         const today = new Date();
         const selectedDate = new Date(value);
         if (selectedDate > today || selectedDate.getFullYear() < 1900) {
