@@ -5,7 +5,7 @@ import ProfileImage from "../../../assets/images/profile-placeholder.png";
 import "./style.css";
 
 function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); //false for disconnected user default
 
   return (
     <header className="navbar">
@@ -31,6 +31,7 @@ function Navbar() {
                 <Link to="/profile-page">Profile</Link>
               </h4>
             </div>
+            <button className="btn log-out">Log out</button>
           </div>
         )}
       </div>

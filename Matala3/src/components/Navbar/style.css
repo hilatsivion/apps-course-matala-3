@@ -55,9 +55,14 @@
   background-color: #3730a3;
 }
 
-.btn.login {
+.btn.login,
+.btn.log-out {
   background-color: transparent;
   color: #4f46e5;
+}
+
+.log-out {
+  margin-left: 2rem;
 }
 
 .btn.login:hover {
