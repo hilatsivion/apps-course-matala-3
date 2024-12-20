@@ -93,7 +93,6 @@ const LoginPage = () => {
       if (result.success) {
         const currentUser = {
           ...result.user,
-          loginDate: new Date().toISOString(),
         };
         localStorage.setItem("currentUser", JSON.stringify(currentUser));
 

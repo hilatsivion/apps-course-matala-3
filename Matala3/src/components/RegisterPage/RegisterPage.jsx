@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import UserAlert from "../UserAlert/UserAlert";
 import registerImage from "../../../assets/images/registar-image.png";
 import "./style.css";
@@ -50,6 +50,7 @@ const registerUser = (user) => {
 };
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
   const [filteredCities, setFilteredCities] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [alerts, setAlerts] = useState({});
@@ -66,6 +67,7 @@ const RegisterPage = () => {
     city: "",
     street: "",
     houseNumber: "",
+    favoriteWebSiteGameLink: "",
   });
 
   const handleCityInput = (e) => {
@@ -165,6 +167,12 @@ const RegisterPage = () => {
         }
         break;
 
+      case "favoriteWebSiteGameLink":
+        if (!/^(http|https):\/\/[^ "]+$/.test(value)) {
+          alertMessage = "Please enter a valid link.";
+        }
+        break;
+
       default:
         break;
     }
@@ -205,6 +213,25 @@ const RegisterPage = () => {
     }
 
     const user = { ...formData };
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const email = users.find((u) => u.email === user.email);
+    if (email) {
+      setGlobalAlert({
+        message: "Email already registered!",
+        type: "error",
+      });
+      return;
+    }
+
+    const username = users.find((u) => u.username === user.username);
+    if (username) {
+      setGlobalAlert({
+        message: "Username already registered!",
+        type: "error",
+      });
+      return;
+    }
+
     delete user.confirmPassword;
 
     const result = registerUser(user);
@@ -227,8 +254,8 @@ const RegisterPage = () => {
         street: "",
         houseNumber: "",
       });
-
       setAlerts({});
+      navigate("/login-page");
     }
   };
 
@@ -429,6 +456,23 @@ const RegisterPage = () => {
               />
               {alerts.houseNumber && (
                 <small className="alert">{alerts.houseNumber}</small>
+              )}
+            </div>
+            {/* Link To A Favorite Website Game */}
+            <div>
+              <label>Link To Your Favorite Game</label>
+              <input
+                type="text"
+                name="favoriteWebSiteGameLink"
+                value={formData.favoriteWebSiteGameLink}
+                onChange={handleChange}
+                placeholder="Enter a link to your favorite game"
+                required
+              />
+              {alerts.favoriteWebSiteGameLink && (
+                <small className="alert">
+                  {alerts.favoriteWebSiteGameLink}
+                </small>
               )}
             </div>
 
