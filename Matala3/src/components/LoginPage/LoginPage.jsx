@@ -15,29 +15,27 @@ const loginUser = (username, password) => {
   if (user) {
     return {
       success: true,
-      user, // Return the full user object
+      user,
       message: "Login successful!",
     };
   } else if (username === "admin" && password === "ad12343211ad") {
-    // Admin credentials
     return {
       success: true,
-      user: { username: "admin", role: "admin" }, // Provide necessary details for the admin
+      user: { username: "admin", role: "admin" },
       message: "Admin login successful!",
     };
   } else {
     return {
       success: false,
-      user: null, // Return null for user when login fails
+      user: null,
       message: "Invalid username or password!",
     };
   }
 };
 
 const LoginPage = () => {
-  console.log(JSON.parse(localStorage.getItem("users")));
-
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -59,7 +57,7 @@ const LoginPage = () => {
     if (name === "username") {
       if (!/^[A-Za-z0-9!@#$%^&*()_+=-]{1,60}$/.test(value)) {
         alertMessage =
-          "Username must be up to 60 characters and contain only letters, numbers, and special characters.";
+          "Can only contain letters, numbers, and special characters without spaces (max 60 chars).";
       }
     }
 
@@ -70,7 +68,7 @@ const LoginPage = () => {
         )
       ) {
         alertMessage =
-          "Password must be 7–12 characters long, include a number, a special character, and an uppercase letter.";
+          "Must be 7–12 characters long, include a number, a special character, and an uppercase letter.";
       }
     }
 
@@ -111,7 +109,6 @@ const LoginPage = () => {
         const currentUser = {
           ...result.user,
         };
-        console.log("Current User:", currentUser);
         sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
 
         if (result.user?.username === "admin") {
@@ -126,7 +123,6 @@ const LoginPage = () => {
   return (
     <div className="main">
       <Navbar />
-      {/* Global Alert */}
       {globalAlert.message && (
         <Alert
           message={globalAlert.message}
@@ -143,6 +139,7 @@ const LoginPage = () => {
             <div>
               <label>Username</label>
               <input
+                className="input-group"
                 type="text"
                 name="username"
                 value={formData.username}
@@ -151,7 +148,7 @@ const LoginPage = () => {
                 required
               />
               {alerts.username && (
-                <small className="inline-alert">{alerts.username}</small>
+                <div className="inline-alert error">{alerts.username}</div>
               )}
             </div>
 
@@ -159,31 +156,27 @@ const LoginPage = () => {
             <div>
               <label>Password</label>
               <input
+                className="input-group"
                 type="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="••••••••••••"
                 required
               />
               {alerts.password && (
-                <small className="inline-alert">{alerts.password}</small>
+                <div className="inline-alert error">{alerts.password}</div>
               )}
             </div>
 
-            {/* Submit Button */}
             <button type="submit" className="btn-primary">
               Login
             </button>
           </form>
 
-          {/* Link to Register */}
           <p className="login-link">
             Don’t have an account? <Link to="/register-page">Sign Up</Link>
           </p>
         </div>
-
-        {/* Right Side: Image */}
         <div className="login-image">
           <img src={loginImage} alt="Login illustration" />
         </div>

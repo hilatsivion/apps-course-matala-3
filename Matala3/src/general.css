@@ -131,3 +131,13 @@ select:focus {
   flex-direction: column;
   width: 100%;
 }
+
+.inline-alert {
+  font-size: 0.85rem;
+  color: #dc2626; /* Red color for errors */
+  transform: translateY(-1rem);
+}
+
+.error {
+  font-weight: bold;
+}

@@ -1,28 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../../assets/images/logo.png";
-import ProfileImage from "../../../assets/images/profile-placeholder.png";
 import "./nav.css";
 
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [profileImage, setProfileImage] = useState(null); // State for the profile image
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if currentUser exists in sessionStorage
     const currentUser = sessionStorage.getItem("currentUser");
     if (currentUser) {
+      const user = JSON.parse(currentUser);
       setIsLoggedIn(true);
+      setProfileImage(user.profilePicture); // Set the profile image from session storage
     } else {
       setIsLoggedIn(false);
+      setProfileImage(null); // Clear the profile image
     }
   }, []);
 
   const handleLogout = () => {
-    // Clear the sessionStorage and log out
     sessionStorage.removeItem("currentUser");
     setIsLoggedIn(false);
-    navigate("/login-page");
+    setProfileImage(null); // Clear the profile image on logout
+    navigate("/");
   };
 
   return (
@@ -39,7 +41,6 @@ function Navbar() {
             <Link to="/register-page">
               <button className="btn create-account">Create Account</button>
             </Link>
-
             <Link to="/login-page">
               <button className="btn login">Log in</button>
             </Link>
@@ -47,7 +48,11 @@ function Navbar() {
         ) : (
           <div className="profile">
             <div className="profile">
-              <img src={ProfileImage} alt="Profile" className="profile-image" />
+              <img
+                src={profileImage || "profile-placeholder.png"} // Use a default image if none exists
+                alt="Profile"
+                className="profile-image"
+              />
               <h4 className="profile-text">
                 <Link to="/profile-page">Profile</Link>
               </h4>

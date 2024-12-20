@@ -55,7 +55,8 @@ const RegisterPage = () => {
   const [filteredCities, setFilteredCities] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [alerts, setAlerts] = useState({});
-  const [globalAlert, setGlobalAlert] = useState({ message: "", type: "" }); // For global messages
+  const [touched, setTouched] = useState({});
+  const [globalAlert, setGlobalAlert] = useState({ message: "", type: "" });
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -124,7 +125,6 @@ const RegisterPage = () => {
 
       case "profilePicture":
         if (value) {
-          // Extract the file name and validate the extension
           const fileName = value instanceof File ? value.name : value;
           if (!/\.(jpg|jpeg)$/i.test(fileName)) {
             alertMessage = "Only JPG or JPEG images are allowed.";
@@ -153,7 +153,10 @@ const RegisterPage = () => {
       case "dateOfBirth": {
         const today = new Date();
         const selectedDate = new Date(value);
-        if (selectedDate > today || selectedDate.getFullYear() < 1900) {
+
+        if (isNaN(selectedDate.getTime())) {
+          alertMessage = "Please enter a valid date.";
+        } else if (selectedDate > today || selectedDate.getFullYear() < 1900) {
           alertMessage = "Enter a valid date of birth.";
         }
         break;
@@ -213,7 +216,6 @@ const RegisterPage = () => {
       return;
     }
 
-    // If valid, convert the file to a URL for storage
     const updatedFormData = { ...formData };
     if (formData.profilePicture instanceof File) {
       updatedFormData.profilePicture = URL.createObjectURL(
@@ -221,11 +223,7 @@ const RegisterPage = () => {
       );
     }
 
-    const user = {
-      ...updatedFormData,
-    };
-    console.log("User:", user);
-
+    const user = { ...updatedFormData };
     delete user.confirmPassword;
 
     const result = registerUser(user);
@@ -235,6 +233,10 @@ const RegisterPage = () => {
     });
 
     if (result.success) {
+      // Add user to sessionStorage
+      sessionStorage.setItem("currentUser", JSON.stringify(user));
+
+      // Reset form data
       setFormData({
         username: "",
         password: "",
@@ -250,7 +252,7 @@ const RegisterPage = () => {
         favoriteWebSiteGameLink: "",
       });
       setAlerts({});
-      navigate("/login-page");
+      navigate("/");
     }
   };
 
@@ -261,23 +263,25 @@ const RegisterPage = () => {
 
     if (type === "file" && files[0]) {
       fieldValue = files[0];
-
       validateField(name, fieldValue.name);
     } else {
       validateField(name, fieldValue);
     }
 
-    // Update formData
     setFormData({
       ...formData,
       [name]: fieldValue,
     });
+
+    setTouched((prev) => ({
+      ...prev,
+      [name]: true,
+    }));
   };
 
   return (
     <div className="main">
       <Navbar />
-      {/* Global Alert */}
       {globalAlert.message && (
         <Alert
           message={globalAlert.message}
@@ -287,13 +291,12 @@ const RegisterPage = () => {
       )}
       <div className="register-container">
         <div className="register-image">
-          <img src={registerImage} alt="Sign up image" />
+          <img src={registerImage} alt="Sign up illustration" />
         </div>
         <div className="register-form">
           <h1>Sign Up</h1>
           <form onSubmit={handleSubmit}>
             <div className="flex">
-              {/* First Name */}
               <div className="form-group">
                 <label>First Name</label>
                 <input
@@ -304,12 +307,10 @@ const RegisterPage = () => {
                   placeholder="Enter your first name"
                   required
                 />
-                {alerts.firstName && (
-                  <small className="alert">{alerts.firstName}</small>
+                {touched.firstName && alerts.firstName && (
+                  <div className="inline-alert error">{alerts.firstName}</div>
                 )}
               </div>
-
-              {/* Last Name */}
               <div className="form-group">
                 <label>Last Name</label>
                 <input
@@ -320,13 +321,12 @@ const RegisterPage = () => {
                   placeholder="Enter your last name"
                   required
                 />
-                {alerts.lastName && (
-                  <small className="alert">{alerts.lastName}</small>
+                {touched.lastName && alerts.lastName && (
+                  <div className="inline-alert error">{alerts.lastName}</div>
                 )}
               </div>
             </div>
             <div className="flex">
-              {/* Username */}
               <div className="form-group">
                 <label>Username</label>
                 <input
@@ -337,11 +337,10 @@ const RegisterPage = () => {
                   placeholder="Enter your username"
                   required
                 />
-                {alerts.username && (
-                  <small className="alert">{alerts.username}</small>
+                {touched.username && alerts.username && (
+                  <div className="inline-alert error">{alerts.username}</div>
                 )}
               </div>
-              {/* Email */}
               <div className="form-group">
                 <label>Email</label>
                 <input
@@ -352,13 +351,12 @@ const RegisterPage = () => {
                   placeholder="example@gmail.com"
                   required
                 />
-                {alerts.email && (
-                  <small className="alert">{alerts.email}</small>
+                {touched.email && alerts.email && (
+                  <div className="inline-alert error">{alerts.email}</div>
                 )}
               </div>
             </div>
             <div className="flex">
-              {/* Password */}
               <div className="form-group">
                 <label>Password</label>
                 <input
@@ -366,15 +364,12 @@ const RegisterPage = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="••••••••••••"
                   required
                 />
-                {alerts.password && (
-                  <small className="alert">{alerts.password}</small>
+                {touched.password && alerts.password && (
+                  <div className="inline-alert error">{alerts.password}</div>
                 )}
               </div>
-
-              {/* Confirm Password */}
               <div className="form-group">
                 <label>Confirm Password</label>
                 <input
@@ -382,17 +377,16 @@ const RegisterPage = () => {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  placeholder="••••••••••••"
                   required
                 />
-                {alerts.confirmPassword && (
-                  <small className="alert">{alerts.confirmPassword}</small>
+                {touched.confirmPassword && alerts.confirmPassword && (
+                  <div className="inline-alert error">
+                    {alerts.confirmPassword}
+                  </div>
                 )}
               </div>
             </div>
-
             <div className="flex">
-              {/* Date of Birth */}
               <div className="form-group">
                 <label>Date of Birth</label>
                 <input
@@ -402,11 +396,10 @@ const RegisterPage = () => {
                   onChange={handleChange}
                   required
                 />
-                {alerts.dateOfBirth && (
-                  <small className="alert">{alerts.dateOfBirth}</small>
+                {touched.dateOfBirth && alerts.dateOfBirth && (
+                  <div className="inline-alert error">{alerts.dateOfBirth}</div>
                 )}
               </div>
-              {/* Profile Picture */}
               <div className="form-group">
                 <label>Profile Picture</label>
                 <input
@@ -415,13 +408,14 @@ const RegisterPage = () => {
                   onChange={handleChange}
                   required
                 />
-                {alerts.profilePicture && (
-                  <small className="alert">{alerts.profilePicture}</small>
+                {touched.profilePicture && alerts.profilePicture && (
+                  <div className="inline-alert error">
+                    {alerts.profilePicture}
+                  </div>
                 )}
               </div>
             </div>
             <div className="flex">
-              {/* City */}
               <div className="form-group" style={{ position: "relative" }}>
                 <label>City</label>
                 <input
@@ -446,10 +440,10 @@ const RegisterPage = () => {
                     ))}
                   </ul>
                 )}
-                {alerts.city && <small className="alert">{alerts.city}</small>}
+                {touched.city && alerts.city && (
+                  <div className="inline-alert error">{alerts.city}</div>
+                )}
               </div>
-
-              {/* Street */}
               <div className="form-group">
                 <label>Street</label>
                 <input
@@ -460,12 +454,10 @@ const RegisterPage = () => {
                   placeholder="Enter your street"
                   required
                 />
-                {alerts.street && (
-                  <small className="alert">{alerts.street}</small>
+                {touched.street && alerts.street && (
+                  <div className="inline-alert error">{alerts.street}</div>
                 )}
               </div>
-
-              {/* House Number */}
               <div className="form-group">
                 <label>House Number</label>
                 <input
@@ -476,12 +468,11 @@ const RegisterPage = () => {
                   placeholder="Enter your house number"
                   required
                 />
-                {alerts.houseNumber && (
-                  <small className="alert">{alerts.houseNumber}</small>
+                {touched.houseNumber && alerts.houseNumber && (
+                  <div className="inline-alert error">{alerts.houseNumber}</div>
                 )}
               </div>
             </div>
-            {/* Link To A Favorite Website Game */}
             <div className="form-group">
               <label>Link To Your Favorite Game</label>
               <input
@@ -492,15 +483,18 @@ const RegisterPage = () => {
                 placeholder="Enter a link to your favorite game"
                 required
               />
-              {alerts.favoriteWebSiteGameLink && (
-                <small className="alert">
-                  {alerts.favoriteWebSiteGameLink}
-                </small>
-              )}
+              {touched.favoriteWebSiteGameLink &&
+                alerts.favoriteWebSiteGameLink && (
+                  <div className="inline-alert error">
+                    {alerts.favoriteWebSiteGameLink}
+                  </div>
+                )}
             </div>
-
-            {/* Submit Button */}
-            <button type="submit" className="btn-primary">
+            <button
+              type="submit"
+              className="btn-primary"
+              disabled={Object.values(alerts).some((alert) => alert !== "")}
+            >
               Create Account
             </button>
             <p className="login-link">

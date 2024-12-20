@@ -10,7 +10,10 @@ function HomePage() {
       <Navbar />
       <main className="home-main">
         <div className="welcome-text">
-          <h1 className="title-header">Welcome to Matala 3</h1>
+          <h1 className="title-header">
+            Welcome to
+            <br /> Matala 3
+          </h1>
           <p>Please connect to a user or create a new user.</p>
         </div>
         <div className="image-bubbles">

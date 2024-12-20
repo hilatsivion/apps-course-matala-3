@@ -20,6 +20,7 @@ body {
 .welcome-text h1.title-header {
   font-size: 6rem;
   line-height: 7rem;
+  text-wrap-mode: nowrap;
 }
 
 .home-main {
@@ -48,4 +49,10 @@ body {
 
 .image-bubbles {
   width: 52vw;
+}
+
+@media (max-width: 900px) {
+  .welcome-text h1.title-header {
+    font-size: 5rem;
+  }
 }

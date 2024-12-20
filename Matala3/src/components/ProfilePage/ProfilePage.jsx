@@ -210,7 +210,7 @@ function ProfilePage() {
             />
             <div>
               <h2>
-                {formData.lastName} {formData.firstName}
+                {formData.firstName} {formData.lastName}
               </h2>
               <p>{formData.email || "No email provided"}</p>
             </div>
