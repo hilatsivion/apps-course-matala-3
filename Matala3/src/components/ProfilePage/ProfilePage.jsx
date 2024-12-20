@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Navbar from "../Navbar/Navbar.jsx";
-import UserAlert from "../UserAlert/UserAlert.jsx";
+import UserAlert from "../Alert/UserAlert.jsx";
 import ProfileImagePlaceholder from "../../../assets/images/profile-placeholder.png";
 import "./style.css";
 
@@ -29,7 +29,7 @@ function ProfilePage() {
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
     switch (name) {
-      case "userName":
+      case "username":
         if (!/^[A-Za-z0-9!@#$%^&*()_+=-]{1,60}$/.test(value)) {
           alertMessage =
             "Username must be up to 60 characters and contain only letters, numbers, and special characters.";
@@ -113,16 +113,22 @@ function ProfilePage() {
     if (alertMessage) {
       setGlobalAlert({ message: alertMessage, type: "error" });
     } else {
-      setGlobalAlert(null); // Clear the global alert if the field is valid
+      setGlobalAlert(null);
     }
 
-    return alertMessage === ""; // Return whether the field is valid
+    return alertMessage === "";
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-    validateField(name, value);
+    const { name, value, type, files } = e.target;
+
+    let fieldValue = value;
+    if (type === "file" && files?.[0]) {
+      fieldValue = URL.createObjectURL(files[0]);
+    }
+
+    setFormData((prevData) => ({ ...prevData, [name]: fieldValue }));
+    validateField(name, fieldValue);
   };
 
   const handleEditClick = () => {
@@ -147,7 +153,6 @@ function ProfilePage() {
   const handleCancelClick = () => {
     setIsEditing(false);
     setFormData({
-      ...formData,
       ...currentUser,
     });
     setGlobalAlert(null); // Clear alerts
