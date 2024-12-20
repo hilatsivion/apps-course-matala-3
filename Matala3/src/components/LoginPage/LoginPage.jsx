@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import loginImage from "../../../assets/images/login-image.png";
+import UserAlert from "../UserAlert/UserAlert";
 import "./style.css";
 import "../../general.css";
 
@@ -12,11 +13,9 @@ const loginUser = (username, password) => {
 
   if (user) {
     sessionStorage.setItem("currentUser", JSON.stringify(user));
-    alert("Login successful!");
-    return true;
+    return { success: true, message: "Login successful!" };
   } else {
-    alert("Invalid username or password!");
-    return false;
+    return { success: false, message: "Invalid username or password!" };
   }
 };
 
@@ -29,6 +28,11 @@ const LoginPage = () => {
   const [alerts, setAlerts] = useState({
     username: "",
     password: "",
+  });
+
+  const [globalAlert, setGlobalAlert] = useState({
+    message: "",
+    type: "error",
   });
 
   const validateField = (name, value) => {
@@ -78,15 +82,31 @@ const LoginPage = () => {
     const isPasswordValid = validateField("password", formData.password);
 
     if (isUsernameValid && isPasswordValid) {
-      const isLoggedIn = loginUser(formData.username, formData.password);
-      if (isLoggedIn) {
-        console.log("Login successful");
+      const result = loginUser(formData.username, formData.password);
+
+      if (result.success) {
+        setGlobalAlert({ message: result.message, type: "success" });
+      } else {
+        setGlobalAlert({ message: result.message, type: "error" });
       }
+    } else {
+      setGlobalAlert({
+        message: "Please fix the errors before submitting.",
+        type: "error",
+      });
     }
   };
 
   return (
     <div className="main">
+      {/* Global Alert */}
+      {globalAlert.message && (
+        <UserAlert
+          message={globalAlert.message}
+          type={globalAlert.type}
+          onClose={() => setGlobalAlert({ message: "", type: "error" })}
+        />
+      )}
       <div className="login-container">
         <div className="login-form">
           <h1>Login</h1>
@@ -104,7 +124,7 @@ const LoginPage = () => {
                 required
               />
               {alerts.username && (
-                <small className="alert">{alerts.username}</small>
+                <small className="inline-alert">{alerts.username}</small>
               )}
             </div>
 
@@ -120,7 +140,7 @@ const LoginPage = () => {
                 required
               />
               {alerts.password && (
-                <small className="alert">{alerts.password}</small>
+                <small className="inline-alert">{alerts.password}</small>
               )}
             </div>
 

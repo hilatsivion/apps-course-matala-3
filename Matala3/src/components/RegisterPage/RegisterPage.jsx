@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import UserAlert from "../UserAlert/UserAlert";
 import registerImage from "../../../assets/images/registar-image.png";
 import "./style.css";
 import "../../general.css";
@@ -41,19 +42,18 @@ const cities = [
 const registerUser = (user) => {
   const users = JSON.parse(localStorage.getItem("users")) || [];
   if (users.some((u) => u.email === user.email)) {
-    alert("Email already registered!");
-    return;
+    return { success: false, message: "Email already registered!" };
   }
-  console.log(user);
   users.push(user);
   localStorage.setItem("users", JSON.stringify(users));
-  alert("User registered successfully!");
+  return { success: true, message: "User registered successfully!" };
 };
 
 const RegisterPage = () => {
   const [filteredCities, setFilteredCities] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [alerts, setAlerts] = useState({});
+  const [globalAlert, setGlobalAlert] = useState({ message: "", type: "" }); // For global messages
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -197,34 +197,51 @@ const RegisterPage = () => {
     );
 
     if (!isValid) {
-      alert("Please fix the errors before submitting.");
+      setGlobalAlert({
+        message: "Please fix the errors before submitting.",
+        type: "error",
+      });
       return;
     }
 
     const user = { ...formData };
     delete user.confirmPassword;
 
-    registerUser(user);
-
-    setFormData({
-      username: "",
-      password: "",
-      confirmPassword: "",
-      profilePicture: null,
-      firstName: "",
-      lastName: "",
-      email: "",
-      dateOfBirth: "",
-      city: "",
-      street: "",
-      houseNumber: "",
+    const result = registerUser(user);
+    setGlobalAlert({
+      message: result.message,
+      type: result.success ? "success" : "error",
     });
 
-    setAlerts({});
+    if (result.success) {
+      setFormData({
+        username: "",
+        password: "",
+        confirmPassword: "",
+        profilePicture: null,
+        firstName: "",
+        lastName: "",
+        email: "",
+        dateOfBirth: "",
+        city: "",
+        street: "",
+        houseNumber: "",
+      });
+
+      setAlerts({});
+    }
   };
 
   return (
     <div className="main">
+      {/* Global Alert */}
+      {globalAlert.message && (
+        <UserAlert
+          message={globalAlert.message}
+          type={globalAlert.type}
+          onClose={() => setGlobalAlert({ message: "", type: "" })}
+        />
+      )}
       <div className="register-container">
         <div className="register-image">
           <img src={registerImage} alt="Sign up image" />
