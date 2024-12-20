@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../../assets/images/logo.png";
+import ProfileImage from "../../../assets/images/profile-placeholder.png";
 import "./style.css";
 
 function Navbar() {
@@ -25,11 +26,7 @@ function Navbar() {
         ) : (
           <div className="profile">
             <div className="profile">
-              <img
-                src="/path/to/profile-image.jpg" // Replace with the actual image path
-                alt="Profile"
-                className="profile-image"
-              />
+              <img src={ProfileImage} alt="Profile" className="profile-image" />
               <h4 className="profile-text">
                 <Link to="/profile-page">Profile</Link>
               </h4>

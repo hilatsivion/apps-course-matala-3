@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Navbar from "../Navbar/Navbar.jsx";
+import ProfileImage from "../../../assets/images/profile-placeholder.png";
 import "./style.css";
 
 function ProfilePage() {
@@ -27,7 +28,7 @@ function ProfilePage() {
 
   const handleSaveClick = () => {
     setIsEditing(false);
-    console.log("Saved data:", formData); // You can replace this with API calls
+    console.log("Saved data:", formData); // Change this to save to your database or API
   };
 
   const handleCancelClick = () => {
@@ -39,14 +40,12 @@ function ProfilePage() {
       <Navbar />
       <div className="profile-container">
         <div className="profile-header">
-          <img
-            src="/path-to-profile-image.jpg" // Replace with your image path
-            alt="Profile"
-            className="profile-image"
-          />
-          <div>
-            <h2>Alexa Rawles</h2>
-            <p>alexarawles@gmail.com</p>
+          <div className="flex">
+            <img src={ProfileImage} alt="Profile" className="profile-image" />
+            <div>
+              <h2>First and Last Name</h2>
+              <p>email@gmail.com</p>
+            </div>
           </div>
           {!isEditing && (
             <button className="btn edit-button" onClick={handleEditClick}>
@@ -55,84 +54,101 @@ function ProfilePage() {
           )}
         </div>
         <form className="profile-form">
-          <div className="form-group">
-            <input
-              type="text"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleInputChange}
-              disabled={!isEditing}
-              placeholder="First Name"
-            />
-            <input
-              type="text"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleInputChange}
-              disabled={!isEditing}
-              placeholder="Last Name"
-            />
-            <input
-              type="text"
-              name="userName"
-              value={formData.userName}
-              onChange={handleInputChange}
-              disabled={!isEditing}
-              placeholder="User Name"
-            />
-            <input
-              type="text"
-              name="dateOfBirth"
-              value={formData.dateOfBirth}
-              onChange={handleInputChange}
-              disabled={!isEditing}
-              placeholder="Date of Birth"
-            />
+          <div className="flex">
+            <div className="form-group">
+              <label>First Name</label>
+              <input
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleInputChange}
+                disabled={!isEditing}
+              />
+            </div>
+            <div className="form-group">
+              <label>Last Name</label>
+              <input
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleInputChange}
+                disabled={!isEditing}
+              />
+            </div>
+          </div>
+          <div className="flex">
+            <div className="form-group">
+              <label>User Name</label>
+              <input
+                type="text"
+                name="userName"
+                value={formData.userName}
+                onChange={handleInputChange}
+                disabled={!isEditing}
+              />
+            </div>
+            <div className="form-group">
+              <label>Date of Birth</label>
+              <input
+                type="text"
+                name="dateOfBirth"
+                value={formData.dateOfBirth}
+                onChange={handleInputChange}
+                disabled={!isEditing}
+              />
+            </div>
+          </div>
+
+          <div className="flex">
+            <div className="form-group">
+              <label>City</label>
+              <input
+                type="text"
+                name="city"
+                value={formData.city}
+                onChange={handleInputChange}
+                disabled={!isEditing}
+              />
+            </div>
+            <div className="form-group">
+              <label>Street</label>
+              <input
+                type="text"
+                name="street"
+                value={formData.street}
+                onChange={handleInputChange}
+                disabled={!isEditing}
+              />
+            </div>
+            <div className="form-group">
+              <label>House Number</label>
+              <input
+                type="text"
+                name="houseNumber"
+                value={formData.houseNumber}
+                onChange={handleInputChange}
+                disabled={!isEditing}
+              />
+            </div>
           </div>
           <div className="form-group">
+            <label>Password</label>
             <input
               type="password"
               name="password"
               value={formData.password}
               onChange={handleInputChange}
               disabled={!isEditing}
-              placeholder="Password"
             />
           </div>
           <div className="form-group">
-            <input
-              type="text"
-              name="city"
-              value={formData.city}
-              onChange={handleInputChange}
-              disabled={!isEditing}
-              placeholder="City"
-            />
-            <input
-              type="text"
-              name="street"
-              value={formData.street}
-              onChange={handleInputChange}
-              disabled={!isEditing}
-              placeholder="Street"
-            />
-            <input
-              type="text"
-              name="houseNumber"
-              value={formData.houseNumber}
-              onChange={handleInputChange}
-              disabled={!isEditing}
-              placeholder="House Number"
-            />
-          </div>
-          <div className="form-group">
+            <label>Favorite Website Game</label>
             <input
               type="url"
               name="favoriteGame"
               value={formData.favoriteGame}
               onChange={handleInputChange}
               disabled={!isEditing}
-              placeholder="Link to a favorite website game"
             />
           </div>
           {isEditing && (
