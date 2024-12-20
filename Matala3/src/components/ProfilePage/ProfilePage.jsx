@@ -4,12 +4,35 @@ import Alert from "../Alert/AlertPopup.jsx";
 import ProfileImagePlaceholder from "../../../assets/images/profile-placeholder.png";
 import "./profile.css";
 
+const cities = [
+  "Jerusalem",
+  "Tel Aviv",
+  "Haifa",
+  "Rishon Lezion",
+  "Petah Tikva",
+  "Ashdod",
+  "Netanya",
+  "Beersheba",
+  "Holon",
+  "Bnei Brak",
+  "Ramat Gan",
+  "Ashkelon",
+  "Bat Yam",
+  "Rehovot",
+  "Herzliya",
+  "Kfar Saba",
+  "Hadera",
+  "Modiin",
+  "Nazareth",
+  "Lod",
+];
+
 function ProfilePage() {
   const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
-  console.log(currentUser);
-
   const [isEditing, setIsEditing] = useState(false);
   const [globalAlert, setGlobalAlert] = useState({ message: "", type: "" });
+  const [filteredCities, setFilteredCities] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
   const [formData, setFormData] = useState({
     firstName: currentUser.firstName,
     lastName: currentUser.lastName,
@@ -34,7 +57,7 @@ function ProfilePage() {
           alertMessage =
             "Username must be up to 60 characters and contain only letters, numbers, and special characters.";
         } else if (
-          value !== currentUser.username && // Allow the current username
+          value !== currentUser.username &&
           users.some((user) => user.username === value)
         ) {
           alertMessage = "Username already registered!";
@@ -66,7 +89,7 @@ function ProfilePage() {
         ) {
           alertMessage = "Email must be valid and end with .com.";
         } else if (
-          value !== currentUser.email && // Allow the current email
+          value !== currentUser.email &&
           users.some((user) => user.email === value)
         ) {
           alertMessage = "Email already registered!";
@@ -82,7 +105,11 @@ function ProfilePage() {
       case "dateOfBirth": {
         const today = new Date();
         const selectedDate = new Date(value);
-        if (selectedDate > today || selectedDate.getFullYear() < 1900) {
+        if (
+          isNaN(selectedDate) ||
+          selectedDate > today ||
+          selectedDate.getFullYear() < 1900
+        ) {
           alertMessage = "Enter a valid date of birth.";
         }
         break;
@@ -120,19 +147,24 @@ function ProfilePage() {
   };
 
   const handleInputChange = (e) => {
-    const { name, value, type, files } = e.target;
+    const { name, value } = e.target;
 
-    let fieldValue = value;
-    if (type === "file" && files?.[0]) {
-      fieldValue = URL.createObjectURL(files[0]);
+    if (name === "city") {
+      setFilteredCities(
+        cities.filter((city) =>
+          city.toLowerCase().startsWith(value.toLowerCase())
+        )
+      );
+      setShowDropdown(value.length > 0);
     }
 
-    setFormData((prevData) => ({ ...prevData, [name]: fieldValue }));
-    validateField(name, fieldValue);
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    validateField(name, value);
   };
 
-  const handleEditClick = () => {
-    setIsEditing(true);
+  const handleCitySelect = (city) => {
+    setFormData((prevData) => ({ ...prevData, city }));
+    setShowDropdown(false);
   };
 
   const handleSaveClick = () => {
@@ -155,17 +187,16 @@ function ProfilePage() {
     setFormData({
       ...currentUser,
     });
-    setGlobalAlert(null); // Clear alerts
+    setGlobalAlert(null);
   };
 
   return (
     <div className="profile-page">
       <Navbar />
-      {/* Global Alert */}
       {globalAlert && (
         <Alert
           message={globalAlert.message}
-          type={globalAlert.type || "error"} // Provide a default value for type
+          type={globalAlert.type || "error"}
           onClose={() => setGlobalAlert(null)}
         />
       )}
@@ -181,11 +212,14 @@ function ProfilePage() {
               <h2>
                 {formData.lastName} {formData.firstName}
               </h2>
-              <p>{currentUser.email || "No email provided"}</p>
+              <p>{formData.email || "No email provided"}</p>
             </div>
           </div>
           {!isEditing && (
-            <button className="btn edit-button" onClick={handleEditClick}>
+            <button
+              className="btn edit-button"
+              onClick={() => setIsEditing(true)}
+            >
               Edit
             </button>
           )}
@@ -215,10 +249,10 @@ function ProfilePage() {
           </div>
           <div className="flex">
             <div className="form-group">
-              <label>User Name</label>
+              <label>Username</label>
               <input
                 type="text"
-                name="userName"
+                name="username"
                 value={formData.username}
                 onChange={handleInputChange}
                 disabled={!isEditing}
@@ -227,7 +261,7 @@ function ProfilePage() {
             <div className="form-group">
               <label>Date of Birth</label>
               <input
-                type="text"
+                type="date"
                 name="dateOfBirth"
                 value={formData.dateOfBirth}
                 onChange={handleInputChange}
@@ -244,7 +278,21 @@ function ProfilePage() {
                 value={formData.city}
                 onChange={handleInputChange}
                 disabled={!isEditing}
+                autoComplete="off"
               />
+              {showDropdown && filteredCities.length > 0 && (
+                <ul className="autocomplete-dropdown">
+                  {filteredCities.map((city, index) => (
+                    <li
+                      key={index}
+                      onClick={() => handleCitySelect(city)}
+                      className="autocomplete-item"
+                    >
+                      {city}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
             <div className="form-group">
               <label>Street</label>
@@ -259,23 +307,13 @@ function ProfilePage() {
             <div className="form-group">
               <label>House Number</label>
               <input
-                type="text"
+                type="number"
                 name="houseNumber"
                 value={formData.houseNumber}
                 onChange={handleInputChange}
                 disabled={!isEditing}
               />
             </div>
-          </div>
-          <div className="form-group">
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              disabled={!isEditing}
-            />
           </div>
           <div className="form-group">
             <label>Favorite Website Game</label>
