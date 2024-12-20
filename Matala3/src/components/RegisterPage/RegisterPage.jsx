@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../Navbar/Navbar.jsx";
 import UserAlert from "../Alert/UserAlert.jsx";
 import registerImage from "../../../assets/images/registar-image.png";
-import "./style.css";
+import "./register.css";
 import "../../general.css";
 
 const cities = [
