@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Navbar from "../Navbar/Navbar.jsx";
-import UserAlert from "../Alert/UserAlert.jsx";
+import Alert from "../Alert/AlertPopup.jsx";
 import ProfileImagePlaceholder from "../../../assets/images/profile-placeholder.png";
 import "./profile.css";
 
@@ -163,7 +163,7 @@ function ProfilePage() {
       <Navbar />
       {/* Global Alert */}
       {globalAlert && (
-        <UserAlert
+        <Alert
           message={globalAlert.message}
           type={globalAlert.type || "error"} // Provide a default value for type
           onClose={() => setGlobalAlert(null)}

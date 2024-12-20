@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../Navbar/Navbar.jsx";
 import loginImage from "../../../assets/images/login-image.png";
-import UserAlert from "../Alert/UserAlert";
+import Alert from "../Alert/AlertPopup.jsx";
 import "./style.css";
 import "../../general.css";
 
@@ -128,7 +128,7 @@ const LoginPage = () => {
       <Navbar />
       {/* Global Alert */}
       {globalAlert.message && (
-        <UserAlert
+        <Alert
           message={globalAlert.message}
           type={globalAlert.type}
           onClose={() => setGlobalAlert({ message: "", type: "error" })}
