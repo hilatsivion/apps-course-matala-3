@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import loginImage from "../../../assets/images/login-image.png";
 import UserAlert from "../UserAlert/UserAlert";
 import "./style.css";
@@ -20,6 +20,7 @@ const loginUser = (username, password) => {
 };
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -84,16 +85,24 @@ const LoginPage = () => {
     if (isUsernameValid && isPasswordValid) {
       const result = loginUser(formData.username, formData.password);
 
-      if (result.success) {
-        setGlobalAlert({ message: result.message, type: "success" });
-      } else {
-        setGlobalAlert({ message: result.message, type: "error" });
-      }
-    } else {
       setGlobalAlert({
-        message: "Please fix the errors before submitting.",
-        type: "error",
+        message: result.message,
+        type: result.success ? "success" : "error",
       });
+
+      if (result.success) {
+        const currentUser = {
+          ...result.user,
+          loginDate: new Date().toISOString(),
+        };
+        localStorage.setItem("currentUser", JSON.stringify(currentUser));
+
+        if (result.user?.username === "admin") {
+          navigate("/Sysadmin");
+        } else {
+          navigate("/Profile");
+        }
+      }
     }
   };
 
