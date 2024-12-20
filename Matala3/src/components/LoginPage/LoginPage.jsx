@@ -114,7 +114,7 @@ const LoginPage = () => {
         sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
 
         if (result.user?.username === "admin") {
-          navigate("/Sysadmin");
+          navigate("/admin-page");
         } else {
           navigate("/profile-page");
         }
