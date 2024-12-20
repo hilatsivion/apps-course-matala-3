@@ -48,12 +48,21 @@
   font-size: 1rem;
   border-radius: 5px;
   cursor: pointer;
+  background-color: #4f46e5;
 }
 
 .edit-button {
-  background-color: #4f46e5;
   color: white;
   border: none;
+}
+
+.blank {
+  color: transparent;
+  user-select: none;
+}
+
+.game-btn {
+  text-wrap: nowrap;
 }
 
 .edit-button:hover {

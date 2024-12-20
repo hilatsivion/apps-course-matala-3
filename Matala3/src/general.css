@@ -72,7 +72,6 @@ button:hover,
 
 /* Forms */
 input,
-textarea,
 select {
   display: block;
   width: 100%;
@@ -81,6 +80,8 @@ select {
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 1rem;
+  max-height: 2.3rem;
+  height: 2.3rem;
 }
 
 input:focus,

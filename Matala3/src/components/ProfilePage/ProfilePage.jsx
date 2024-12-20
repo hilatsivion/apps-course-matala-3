@@ -315,16 +315,37 @@ function ProfilePage() {
               />
             </div>
           </div>
-          <div className="form-group">
-            <label>Favorite Website Game</label>
-            <input
-              type="url"
-              name="favoriteWebSiteGameLink"
-              value={formData.favoriteWebSiteGameLink}
-              onChange={handleInputChange}
-              disabled={!isEditing}
-            />
+          <div className="flex flex-bottom">
+            <div className="form-group">
+              <label>Favorite Website Game</label>
+              <input
+                type="url"
+                name="favoriteWebSiteGameLink"
+                value={formData.favoriteWebSiteGameLink}
+                onChange={handleInputChange}
+                disabled={!isEditing}
+              />
+            </div>
+            <div>
+              <label className="blank">c</label>
+              {formData.favoriteWebSiteGameLink ? (
+                <a
+                  href={formData.favoriteWebSiteGameLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <button type="button" className="btn game-btn">
+                    Go to Game
+                  </button>
+                </a>
+              ) : (
+                <button type="button" className="btn game-btn" disabled>
+                  Go to Game
+                </button>
+              )}
+            </div>
           </div>
+
           {isEditing && (
             <div className="form-actions">
               <button

@@ -61,6 +61,8 @@ label {
 
 .form-group input {
   margin-bottom: 1.5rem;
+  max-height: 2.3rem;
+  height: 2.3rem;
 }
 
 input {
