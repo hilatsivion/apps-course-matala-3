@@ -59,6 +59,7 @@
 .btn.log-out {
   background-color: transparent;
   color: #4f46e5;
+  border: 2px solid;
 }
 
 .log-out {

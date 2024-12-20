@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import "./style.css";
+import "./alert.css";
 
 const UserAlert = ({ message, type = "error", onClose }) => {
   if (!message) return null;

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../Navbar/Navbar.jsx";
-import UserAlert from "../Alert/UserAlert.jsx";
+import Alert from "../Alert/AlertPopup.jsx";
 import registerImage from "../../../assets/images/registar-image.png";
 import "./register.css";
 import "../../general.css";
@@ -279,7 +279,7 @@ const RegisterPage = () => {
       <Navbar />
       {/* Global Alert */}
       {globalAlert.message && (
-        <UserAlert
+        <Alert
           message={globalAlert.message}
           type={globalAlert.type}
           onClose={() => setGlobalAlert({ message: "", type: "" })}
