@@ -1,5 +1,5 @@
 .admin-container {
-  min-width: 1200px;
+  min-width: 1300px;
   margin: 2rem auto;
   padding: 1rem;
 }
@@ -78,6 +78,11 @@ h1 {
 
 .edit-btn {
   color: #4f46e5;
+}
+
+.edit-btn img,
+.delete-btn img {
+  width: 24px;
 }
 
 .edit-btn:hover {

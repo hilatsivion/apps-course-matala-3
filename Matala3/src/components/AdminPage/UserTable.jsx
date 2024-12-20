@@ -17,7 +17,7 @@ function UserTable({ users, onEdit, onDelete }) {
       <tbody>
         {users.map((user) => (
           <UserRow
-            key={user.id}
+            key={user.email}
             user={user}
             onEdit={onEdit}
             onDelete={onDelete}

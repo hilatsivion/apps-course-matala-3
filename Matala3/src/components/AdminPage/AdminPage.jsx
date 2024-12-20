@@ -5,17 +5,16 @@ import "./style.css";
 
 function AdminPage() {
   const [users, setUsers] = useState([
+    // TODO: we need to get the users json
     {
-      id: 1,
       email: "hila@gmail.com",
       username: "Matthew Wilson",
       fullName: "Blah Blah",
       birthdate: "06-03-2021",
       address: "123 Street, City",
-      profileImage: "https://via.placeholder.com/40", // Example placeholder image
+      profileImage: "https://via.placeholder.com/40",
     },
     {
-      id: 2,
       email: "sarah@gmail.com",
       username: "Sarah Martin",
       fullName: "Sarah Martin",
@@ -27,13 +26,14 @@ function AdminPage() {
 
   // Admin deletes a user from the "database"
   const handleDelete = (email) => {
+    // TODO: delete from view & delete from our data
     setUsers(users.filter((user) => user.email !== email));
   };
 
   // Admin edits the user info
   const handleEdit = (email) => {
     console.log("Edit user with email:", email);
-    // Add functionality for editing the user
+    // TODO: Add functionality for editing the user
   };
 
   return (
