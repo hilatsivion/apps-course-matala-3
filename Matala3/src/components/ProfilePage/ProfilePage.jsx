@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Navbar from "../Navbar/Navbar.jsx";
 import UserAlert from "../Alert/UserAlert.jsx";
 import ProfileImagePlaceholder from "../../../assets/images/profile-placeholder.png";
-import "./style.css";
+import "./profile.css";
 
 function ProfilePage() {
   const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));

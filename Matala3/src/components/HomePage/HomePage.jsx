@@ -1,5 +1,5 @@
 import React from "react";
-import "./style.css";
+import "./home.css";
 import "../../general.css";
 import Navbar from "../Navbar/Navbar.jsx";
 import bubbles from "../../../assets/images/bubbles-big.png";

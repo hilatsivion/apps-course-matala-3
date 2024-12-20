@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../../assets/images/logo.png";
 import ProfileImage from "../../../assets/images/profile-placeholder.png";
-import "./style.css";
+import "./nav.css";
 
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

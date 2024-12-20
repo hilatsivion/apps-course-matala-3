@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Navbar from "../Navbar/Navbar.jsx";
 import UserAlert from "../Alert/UserAlert.jsx";
 import registerImage from "../../../assets/images/registar-image.png";
 import "./style.css";
@@ -264,6 +265,7 @@ const RegisterPage = () => {
 
   return (
     <div className="main">
+      <Navbar />
       {/* Global Alert */}
       {globalAlert.message && (
         <UserAlert

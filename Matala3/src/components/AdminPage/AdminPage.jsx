@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../Navbar/Navbar.jsx";
 import UserTable from "./UserTable.jsx";
-import "./style.css";
+import "./admin.css";
 
 function AdminPage() {
   const [users, setUsers] = useState([

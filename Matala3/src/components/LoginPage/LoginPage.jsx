@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Navbar from "../Navbar/Navbar.jsx";
 import loginImage from "../../../assets/images/login-image.png";
 import UserAlert from "../Alert/UserAlert";
 import "./style.css";
@@ -124,6 +125,7 @@ const LoginPage = () => {
 
   return (
     <div className="main">
+      <Navbar />
       {/* Global Alert */}
       {globalAlert.message && (
         <UserAlert
