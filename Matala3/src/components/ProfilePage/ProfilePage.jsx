@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../Navbar/Navbar.jsx";
 import Alert from "../Alert/AlertPopup.jsx";
 import ProfileImagePlaceholder from "../../../assets/images/profile-placeholder.png";
+import { getProfilePictureFromIndexedDB } from "../../indexDB.jsx";
 import "./profile.css";
 
 const cities = [
@@ -39,13 +40,25 @@ function ProfilePage() {
     username: currentUser.username,
     email: currentUser.email,
     dateOfBirth: currentUser.dateOfBirth,
-    profilePicture: currentUser.profilePicture || ProfileImagePlaceholder,
+    profilePicture: ProfileImagePlaceholder,
     password: currentUser.password,
     city: currentUser.city,
     street: currentUser.street,
     houseNumber: currentUser.houseNumber,
     favoriteWebSiteGameLink: currentUser.favoriteWebSiteGameLink,
   });
+
+  useEffect(() => {
+    const loadProfilePicture = async () => {
+      const picture = await getProfilePictureFromIndexedDB(currentUser.email);
+      setFormData((prevData) => ({
+        ...prevData,
+        profilePicture: picture || ProfileImagePlaceholder,
+      }));
+    };
+
+    loadProfilePicture();
+  }, [currentUser.email]);
 
   const validateField = (name, value) => {
     let alertMessage = "";

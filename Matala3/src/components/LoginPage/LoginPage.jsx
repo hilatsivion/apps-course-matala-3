@@ -94,28 +94,23 @@ const LoginPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const isUsernameValid = validateField("username", formData.username);
-    const isPasswordValid = validateField("password", formData.password);
+    const result = loginUser(formData.username, formData.password);
 
-    if (isUsernameValid && isPasswordValid) {
-      const result = loginUser(formData.username, formData.password);
+    setGlobalAlert({
+      message: result.message,
+      type: result.success ? "success" : "error",
+    });
 
-      setGlobalAlert({
-        message: result.message,
-        type: result.success ? "success" : "error",
-      });
+    if (result.success) {
+      const currentUser = {
+        ...result.user,
+      };
+      sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
 
-      if (result.success) {
-        const currentUser = {
-          ...result.user,
-        };
-        sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
-
-        if (result.user?.username === "admin") {
-          navigate("/admin-page");
-        } else {
-          navigate("/profile-page");
-        }
+      if (result.user?.username === "admin") {
+        navigate("/admin-page");
+      } else {
+        navigate("/profile-page");
       }
     }
   };

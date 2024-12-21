@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../Navbar/Navbar.jsx";
 import Alert from "../Alert/AlertPopup.jsx";
 import registerImage from "../../../assets/images/registar-image.png";
+import { saveProfilePictureToIndexedDB } from "../../indexDB.jsx";
 import "./register.css";
 import "../../general.css";
 
@@ -198,15 +199,14 @@ const RegisterPage = () => {
     return alertMessage === "";
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const isValid = Object.keys(formData).every((key) => {
-      if (key === "profilePicture" && formData.profilePicture instanceof File) {
-        return validateField(key, formData.profilePicture.name);
-      }
-      return validateField(key, formData[key]);
-    });
+    const isValid = Object.keys(formData).every((key) =>
+      key === "profilePicture"
+        ? validateField(key, formData.profilePicture)
+        : validateField(key, formData[key])
+    );
 
     if (!isValid) {
       setGlobalAlert({
@@ -216,44 +216,29 @@ const RegisterPage = () => {
       return;
     }
 
-    const updatedFormData = { ...formData };
-    if (formData.profilePicture instanceof File) {
-      updatedFormData.profilePicture = URL.createObjectURL(
+    // Save profile picture to IndexedDB if provided
+    if (formData.profilePicture) {
+      await saveProfilePictureToIndexedDB(
+        formData.email,
         formData.profilePicture
       );
     }
 
-    const user = { ...updatedFormData };
+    // Prepare user data without profile picture file
+    const user = { ...formData };
     delete user.confirmPassword;
+    delete user.profilePicture;
 
-    const result = registerUser(user);
+    // Save user data to localStorage
+    registerUser(user);
+
     setGlobalAlert({
-      message: result.message,
-      type: result.success ? "success" : "error",
+      message: "User registered successfully!",
+      type: "success",
     });
 
-    if (result.success) {
-      // Add user to sessionStorage
-      sessionStorage.setItem("currentUser", JSON.stringify(user));
-
-      // Reset form data
-      setFormData({
-        username: "",
-        password: "",
-        confirmPassword: "",
-        profilePicture: null,
-        firstName: "",
-        lastName: "",
-        email: "",
-        dateOfBirth: "",
-        city: "",
-        street: "",
-        houseNumber: "",
-        favoriteWebSiteGameLink: "",
-      });
-      setAlerts({});
-      navigate("/");
-    }
+    // Navigate to another page after a delay
+    setTimeout(() => navigate("/login-page"), 2000);
   };
 
   const handleChange = (e) => {

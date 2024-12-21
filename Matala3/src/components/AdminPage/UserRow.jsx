@@ -1,11 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import editIcon from "../../../assets/images/Edit.png";
 import deleteIcon from "../../../assets/images/Delete.png";
+import { getProfilePictureFromIndexedDB } from "../../indexDB";
+import ProfileImagePlaceholder from "../../../assets/images/profile-placeholder.png";
 
 function UserRow({ user, onEdit, onDelete, onAlert }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState(user);
+  const [profilePicture, setProfilePicture] = useState(ProfileImagePlaceholder);
+
+  useEffect(() => {
+    const loadProfilePicture = async () => {
+      const picture = await getProfilePictureFromIndexedDB(user.email);
+      setProfilePicture(picture || ProfileImagePlaceholder);
+    };
+
+    loadProfilePicture();
+  }, [user.email]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -77,7 +89,7 @@ function UserRow({ user, onEdit, onDelete, onAlert }) {
     <tr>
       <td>
         <img
-          src={user.profilePicture}
+          src={profilePicture}
           alt="Profile"
           className="profile-image"
           style={{ width: "40px", height: "40px", borderRadius: "50%" }}
