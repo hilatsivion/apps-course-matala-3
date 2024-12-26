@@ -40,7 +40,7 @@ function ProfilePage() {
     username: currentUser.username,
     email: currentUser.email,
     dateOfBirth: currentUser.dateOfBirth,
-    profilePicture: ProfileImagePlaceholder,
+    profilePicture: currentUser.profilePicture,
     password: currentUser.password,
     city: currentUser.city,
     street: currentUser.street,
