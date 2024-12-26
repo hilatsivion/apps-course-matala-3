@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import logo from "../../../assets/images/logo.png";
 import "./nav.css";
 import { getProfilePictureFromIndexedDB } from "../../indexDB.jsx";
@@ -31,7 +31,7 @@ function Navbar() {
       setProfileImage(null); // Clear the profile image
       setIsAdmin(false); // Reset admin state
     }
-  },[isAdmin]);
+  }, [isAdmin]);
 
   const handleLogout = () => {
     sessionStorage.removeItem("currentUser");
@@ -41,18 +41,22 @@ function Navbar() {
     navigate("/");
   };
 
+  const handleAdminPageNavigation = () => {
+    navigate("/admin-page");
+  };
+
   if (isAdmin) {
     return (
       <header className="navbar">
         <div className="logo">
-          <Link to="/" className="logo">
+          <div className="logo" onClick={() => navigate("/")}>
             <img src={logo} alt="logo" />
             <h1>Matala3</h1>
-          </Link>
+          </div>
         </div>
         <div className="buttons">
-          <h4 className="profile-text">
-            <Link to="/admin-page">Admin Page</Link>
+          <h4 className="profile-text" onClick={handleAdminPageNavigation}>
+            Admin Page
           </h4>
           <button className="btn log-out" onClick={handleLogout}>
             Log out
@@ -65,20 +69,26 @@ function Navbar() {
   return (
     <header className="navbar">
       <div className="logo">
-        <Link to="/" className="logo">
+        <div className="logo" onClick={() => navigate("/")}>
           <img src={logo} alt="logo" />
           <h1>Matala3</h1>
-        </Link>
+        </div>
       </div>
       <div className="buttons">
         {!isLoggedIn ? (
           <>
-            <Link to="/register-page">
-              <button className="btn create-account">Create Account</button>
-            </Link>
-            <Link to="/login-page">
-              <button className="btn login">Log in</button>
-            </Link>
+            <button
+              className="btn create-account"
+              onClick={() => navigate("/register-page")}
+            >
+              Create Account
+            </button>
+            <button
+              className="btn login"
+              onClick={() => navigate("/login-page")}
+            >
+              Log in
+            </button>
           </>
         ) : (
           <div className="profile">
@@ -87,8 +97,11 @@ function Navbar() {
               alt="Profile"
               className="profile-image"
             />
-            <h4 className="profile-text">
-              <Link to="/profile-page">Profile</Link>
+            <h4
+              className="profile-text"
+              onClick={() => navigate("/profile-page")}
+            >
+              Profile
             </h4>
             <button className="btn log-out" onClick={handleLogout}>
               Log out
