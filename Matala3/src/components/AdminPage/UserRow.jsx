@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import editIcon from "../../../assets/images/Edit.png";
 import deleteIcon from "../../../assets/images/Delete.png";
@@ -15,8 +15,9 @@ function UserRow({ user, onEdit, onDelete, onAlert }) {
       const picture = await getProfilePictureFromIndexedDB(user.email);
       setProfilePicture(picture || ProfileImagePlaceholder);
     };
-
-    loadProfilePicture();
+      if (user.email){
+      loadProfilePicture();
+    }
   }, [user.email]);
 
   const handleChange = (e) => {
@@ -216,6 +217,12 @@ UserRow.propTypes = {
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onAlert: PropTypes.func.isRequired,
+};
+
+UserRow.defaultProps = {
+  user: {
+    profilePicture: ProfileImagePlaceholder, // Fallback to placeholder image
+  },
 };
 
 export default UserRow;
