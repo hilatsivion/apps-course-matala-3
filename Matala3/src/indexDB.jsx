@@ -1,6 +1,6 @@
 export const saveProfilePictureToIndexedDB = (email, file) => {
   return new Promise((resolve, reject) => {
-    const openDatabase = (version) => indexedDB.open("ProfileDB", version);
+    const openDatabase = (version = undefined) => indexedDB.open("ProfileDB", version);
 
     const createOrUpgradeStore = (currentVersion) => {
       const newVersion = currentVersion + 1;
@@ -45,7 +45,7 @@ export const saveProfilePictureToIndexedDB = (email, file) => {
       reader.readAsDataURL(file);
     };
 
-    const initialRequest = openDatabase(2);
+    const initialRequest = openDatabase();
 
     initialRequest.onupgradeneeded = (event) => {
       const db = event.target.result;
@@ -72,7 +72,7 @@ export const saveProfilePictureToIndexedDB = (email, file) => {
 
 export const getProfilePictureFromIndexedDB = (email) => {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open("ProfileDB", 2);
+    const request = indexedDB.open("ProfileDB");
 
     request.onsuccess = (event) => {
       const db = event.target.result;
