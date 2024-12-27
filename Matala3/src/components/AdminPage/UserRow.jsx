@@ -7,24 +7,31 @@ import ProfileImagePlaceholder from "../../../assets/images/profile-placeholder.
 
 function UserRow({ user, onEdit, onDelete, onAlert }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedUser, setEditedUser] = useState(user);
+  const [editedUser, setEditedUser] = useState({ ...user }); // Deep copy to avoid state mutation
   const [profilePicture, setProfilePicture] = useState(ProfileImagePlaceholder);
 
+  // Load profile picture from IndexedDB
   useEffect(() => {
     const loadProfilePicture = async () => {
       const picture = await getProfilePictureFromIndexedDB(user.email);
-      setProfilePicture(picture || ProfileImagePlaceholder);
+      setProfilePicture(picture || ProfileImagePlaceholder); // Fallback to placeholder
     };
-      if (user.email){
+
+    if (user.email) {
       loadProfilePicture();
     }
   }, [user.email]);
 
+  // Handle input changes during editing
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEditedUser({ ...editedUser, [name]: value });
+    setEditedUser((prevUser) => ({
+      ...prevUser,
+      [name]: value,
+    }));
   };
 
+  // Handle save action
   const handleSave = () => {
     const isValid = Object.entries(editedUser).every(([key, value]) =>
       validateField(key, value)
@@ -38,18 +45,13 @@ function UserRow({ user, onEdit, onDelete, onAlert }) {
     }
   };
 
+  // Validation logic for each field
   const validateField = (name, value) => {
     let isValid = true;
 
     switch (name) {
       case "username":
         isValid = /^[A-Za-z0-9!@#$%^&*()_+=-]{1,60}$/.test(value);
-        break;
-
-      case "email":
-        isValid =
-          /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(value) &&
-          value.endsWith(".com");
         break;
 
       case "firstName":
@@ -96,16 +98,9 @@ function UserRow({ user, onEdit, onDelete, onAlert }) {
           style={{ width: "40px", height: "40px", borderRadius: "50%" }}
         />
       </td>
+      <td>{user.email}</td>
       {isEditing ? (
         <>
-          <td>
-            <input
-              type="text"
-              name="username"
-              value={editedUser.username}
-              onChange={handleChange}
-            />
-          </td>
           <td>
             <input
               type="text"
@@ -124,9 +119,9 @@ function UserRow({ user, onEdit, onDelete, onAlert }) {
           </td>
           <td>
             <input
-              type="email"
-              name="email"
-              value={editedUser.email}
+              type="text"
+              name="username"
+              value={editedUser.username}
               onChange={handleChange}
             />
           </td>
@@ -176,10 +171,9 @@ function UserRow({ user, onEdit, onDelete, onAlert }) {
         </>
       ) : (
         <>
-          <td>{user.username}</td>
           <td>{user.firstName}</td>
           <td>{user.lastName}</td>
-          <td>{user.email}</td>
+          <td>{user.username}</td>
           <td>{user.dateOfBirth}</td>
           <td>{user.city}</td>
           <td>{user.street}</td>
@@ -203,7 +197,7 @@ function UserRow({ user, onEdit, onDelete, onAlert }) {
 
 UserRow.propTypes = {
   user: PropTypes.shape({
-    profilePicture: PropTypes.string.isRequired,
+    profilePicture: PropTypes.string,
     username: PropTypes.string.isRequired,
     firstName: PropTypes.string.isRequired,
     lastName: PropTypes.string.isRequired,
@@ -217,12 +211,6 @@ UserRow.propTypes = {
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onAlert: PropTypes.func.isRequired,
-};
-
-UserRow.defaultProps = {
-  user: {
-    profilePicture: ProfileImagePlaceholder, // Fallback to placeholder image
-  },
 };
 
 export default UserRow;

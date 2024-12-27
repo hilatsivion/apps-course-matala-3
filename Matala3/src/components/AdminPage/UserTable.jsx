@@ -8,10 +8,10 @@ function UserTable({ users, onEdit, onDelete, onAlert }) {
       <thead>
         <tr>
           <th>Profile Picture</th>
-          <th>Username</th>
+          <th>Email Address</th>
           <th>First Name</th>
           <th>Last Name</th>
-          <th>Email Address</th>
+          <th>Username</th>
           <th>Date of Birth</th>
           <th>City</th>
           <th>Street</th>

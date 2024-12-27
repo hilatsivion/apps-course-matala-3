@@ -56,8 +56,7 @@ function ProfilePage() {
         ...prevData,
         profilePicture: picture || ProfileImagePlaceholder,
       }));
-      setPicture(picture)
-
+      setPicture(picture);
     };
 
     loadProfilePicture();
@@ -190,25 +189,40 @@ function ProfilePage() {
 
     if (isValid) {
       setIsEditing(false);
+
+      // Update sessionStorage
       sessionStorage.setItem("currentUser", JSON.stringify(formData));
+
+      // Update localStorage
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      const updatedUsers = users.map((user) =>
+        user.email === currentUser.email ? formData : user
+      );
+      localStorage.setItem("users", JSON.stringify(updatedUsers));
+
       setGlobalAlert({
         message: "Profile updated successfully!",
         type: "success",
+      });
+    } else {
+      setGlobalAlert({
+        message: "Validation failed. Please fix the errors and try again.",
+        type: "error",
       });
     }
   };
 
   const handleCancelClick = () => {
     setIsEditing(false);
-  
+
     setFormData(() => ({
       ...currentUser,
-      profilePicture: proPicture || ProfileImagePlaceholder, 
+      profilePicture: proPicture || ProfileImagePlaceholder,
     }));
-  
+
     setGlobalAlert(null);
   };
-  
+
   return (
     <div className="profile-page">
       <Navbar />

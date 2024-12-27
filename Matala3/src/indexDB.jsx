@@ -1,6 +1,7 @@
 export const saveProfilePictureToIndexedDB = (email, file) => {
   return new Promise((resolve, reject) => {
-    const openDatabase = (version = undefined) => indexedDB.open("ProfileDB", version);
+    const openDatabase = (version = undefined) =>
+      indexedDB.open("ProfileDB", version);
 
     const createOrUpgradeStore = (currentVersion) => {
       const newVersion = currentVersion + 1;
@@ -104,5 +105,42 @@ export const getProfilePictureFromIndexedDB = (email) => {
     };
 
     request.onerror = (event) => reject(event.target.error);
+  });
+};
+
+export const deleteProfilePictureFromIndexedDB = (email) => {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open("ProfileDB", 2);
+
+    request.onsuccess = (event) => {
+      const db = event.target.result;
+
+      if (!db.objectStoreNames.contains("ProfilePictures")) {
+        console.error("Object store 'ProfilePictures' not found!");
+        return reject(
+          new Error("Object store 'ProfilePictures' does not exist.")
+        );
+      }
+
+      const transaction = db.transaction("ProfilePictures", "readwrite");
+      const store = transaction.objectStore("ProfilePictures");
+
+      const deleteRequest = store.delete(email);
+
+      deleteRequest.onsuccess = () => {
+        console.log("Profile picture deleted successfully.");
+        resolve();
+      };
+
+      deleteRequest.onerror = (event) => {
+        console.error("Error deleting profile picture:", event.target.error);
+        reject(event.target.error);
+      };
+    };
+
+    request.onerror = (event) => {
+      console.error("Error opening IndexedDB:", event.target.error);
+      reject(event.target.error);
+    };
   });
 };

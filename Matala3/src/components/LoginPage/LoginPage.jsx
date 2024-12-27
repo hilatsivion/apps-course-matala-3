@@ -51,6 +51,7 @@ const LoginPage = ({ setCurrentUser }) => {
     type: "error",
   });
 
+  // validates the fields of the login form
   const validateField = (name, value) => {
     let alertMessage = "";
 
@@ -72,6 +73,7 @@ const LoginPage = ({ setCurrentUser }) => {
       }
     }
 
+    // update alerts with message
     setAlerts((prevAlerts) => ({
       ...prevAlerts,
       [name]: alertMessage,
@@ -80,6 +82,7 @@ const LoginPage = ({ setCurrentUser }) => {
     return alertMessage === "";
   };
 
+  // change the fileds text according to the user insertion
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -91,10 +94,11 @@ const LoginPage = ({ setCurrentUser }) => {
     validateField(name, value);
   };
 
+  // submitting the login form - saves user in the SS
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const result = loginUser(formData.username, formData.password);
+    let result = loginUser(formData.username, formData.password);
 
     setGlobalAlert({
       message: result.message,
@@ -106,8 +110,9 @@ const LoginPage = ({ setCurrentUser }) => {
         ...result.user,
       };
       sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
-      setCurrentUser(currentUser); // Update the app-level state
+      setCurrentUser(currentUser);
 
+      // checks if he user is admin
       if (result.user?.username === "admin") {
         navigate("/admin-page");
       } else {

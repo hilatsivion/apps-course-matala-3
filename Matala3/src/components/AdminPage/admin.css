@@ -100,3 +100,7 @@
 .delete-btn:hover {
   transform: scale(1.1);
 }
+
+td {
+  height: 90px;
+}
