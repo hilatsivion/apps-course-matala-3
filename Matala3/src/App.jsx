@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -12,10 +12,24 @@ import ProfilePage from "./components/ProfilePage/ProfilePage";
 import AdminPage from "./components/AdminPage/AdminPage";
 
 const App = () => {
-  const getCurrentUser = () => {
-    const currentUser = sessionStorage.getItem("currentUser");
-    return currentUser ? JSON.parse(currentUser) : null;
-  };
+  const [currentUser, setCurrentUser] = useState(() => {
+    // Initialize state from sessionStorage
+    const user = sessionStorage.getItem("currentUser");
+    return user ? JSON.parse(user) : null;
+  });
+
+  useEffect(() => {
+    // Listener for changes in sessionStorage
+    const handleStorageChange = () => {
+      const user = sessionStorage.getItem("currentUser");
+      setCurrentUser(user ? JSON.parse(user) : null);
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
 
   const ProtectedRoute = ({ children, redirectTo, condition }) => {
     return condition ? children : <Navigate to={redirectTo} />;
@@ -33,7 +47,7 @@ const App = () => {
           path="/profile-page"
           element={
             <ProtectedRoute
-              condition={getCurrentUser() !== null}
+              condition={currentUser !== null}
               redirectTo="/"
             >
               <ProfilePage />
@@ -46,7 +60,7 @@ const App = () => {
           path="/admin-page"
           element={
             <ProtectedRoute
-              condition={getCurrentUser()?.username === "admin"}
+              condition={currentUser?.username === "admin"}
               redirectTo="/"
             >
               <AdminPage />
