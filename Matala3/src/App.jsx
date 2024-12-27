@@ -46,10 +46,7 @@ const App = () => {
         <Route
           path="/profile-page"
           element={
-            <ProtectedRoute
-              condition={currentUser !== null}
-              redirectTo="/"
-            >
+            <ProtectedRoute condition={currentUser !== null} redirectTo="/">
               <ProfilePage />
             </ProtectedRoute>
           }
