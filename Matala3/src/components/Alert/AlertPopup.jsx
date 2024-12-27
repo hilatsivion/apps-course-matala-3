@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./alert.css";
 
+// alert popup for user inputs
 const UserAlert = ({ message, type = "error", onClose }) => {
   if (!message) return null;
 

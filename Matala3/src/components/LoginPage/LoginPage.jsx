@@ -6,6 +6,7 @@ import Alert from "../Alert/AlertPopup.jsx";
 import "./style.css";
 import "../../general.css";
 
+// handles the login of a user
 const loginUser = (username, password) => {
   const users = JSON.parse(localStorage.getItem("users")) || [];
   const user = users.find(

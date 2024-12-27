@@ -6,6 +6,7 @@ function UserTable({ users, onEdit, onDelete, onAlert }) {
   return (
     <table className="user-table">
       <thead>
+        {/* header in table */}
         <tr>
           <th>Profile Picture</th>
           <th>Email Address</th>
@@ -34,6 +35,7 @@ function UserTable({ users, onEdit, onDelete, onAlert }) {
   );
 }
 
+// required fields
 UserTable.propTypes = {
   users: PropTypes.arrayOf(
     PropTypes.shape({

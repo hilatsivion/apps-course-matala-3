@@ -10,16 +10,10 @@ function AdminPage() {
     return storedUsers ? JSON.parse(storedUsers) : [];
   });
 
+  // update the local storage with the updated users list
   const updateLocalStorage = (updatedUsers) => {
     localStorage.setItem("users", JSON.stringify(updatedUsers));
     setUsers(updatedUsers);
-  };
-
-  const updateSessionStorage = (updatedUser) => {
-    const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
-    if (currentUser?.email === updatedUser.email) {
-      sessionStorage.setItem("currentUser", JSON.stringify(updatedUser));
-    }
   };
 
   const handleDelete = (email) => {
@@ -35,14 +29,14 @@ function AdminPage() {
       );
   };
 
+  // update the table and save changes in storage
   const handleEdit = (updatedUser) => {
     const updatedUsers = users.map((user) =>
       user.email === updatedUser.email ? updatedUser : user
     );
 
-    // Update both localStorage and sessionStorage
+    // Update localStorage - users list
     updateLocalStorage(updatedUsers);
-    updateSessionStorage(updatedUser);
   };
 
   const handleAlert = (message) => {

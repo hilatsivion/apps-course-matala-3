@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import logo from "../../../assets/images/logo.png";
 import "./nav.css";
 import { getProfilePictureFromIndexedDB } from "../../indexDB.jsx";
+import ProfileImagePlaceholder from "../../../assets/images/profile-placeholder.png";
 
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -10,6 +11,7 @@ function Navbar() {
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
 
+  // changes the navbar according to login state
   useEffect(() => {
     const currentUser = sessionStorage.getItem("currentUser");
     if (currentUser) {
@@ -18,7 +20,7 @@ function Navbar() {
       if (user.username === "admin") {
         setIsAdmin(true);
       }
-      if ((!isAdmin) && (user.email)) {
+      if (!isAdmin && user.email) {
         const loadProfilePicture = async () => {
           const picture = await getProfilePictureFromIndexedDB(user.email);
           setProfileImage(picture || null);
@@ -45,6 +47,7 @@ function Navbar() {
     navigate("/admin-page");
   };
 
+  // handle admin navbar
   if (isAdmin) {
     return (
       <header className="navbar">
@@ -93,7 +96,7 @@ function Navbar() {
         ) : (
           <div className="profile">
             <img
-              src={profileImage || "profile-placeholder.png"} // Use a default image if none exists
+              src={profileImage || ProfileImagePlaceholder}
               alt="Profile"
               className="profile-image"
             />

@@ -5,6 +5,7 @@ import ProfileImagePlaceholder from "../../../assets/images/profile-placeholder.
 import { getProfilePictureFromIndexedDB } from "../../indexDB.jsx";
 import "./profile.css";
 
+// list of cities for the dropdown
 const cities = [
   "Jerusalem",
   "Tel Aviv",
@@ -23,9 +24,20 @@ const cities = [
   "Herzliya",
   "Kfar Saba",
   "Hadera",
-  "Modiin",
+  "Modiin-Maccabim-Reut",
   "Nazareth",
   "Lod",
+  "Raanana",
+  "Acre (Akko)",
+  "Nahariya",
+  "Kiryat Gat",
+  "Eilat",
+  "Kiryat Motzkin",
+  "Kiryat Ono",
+  "Kiryat Yam",
+  "Tiberias",
+  "Kiryat Shmona",
+  "Sderot",
 ];
 
 function ProfilePage() {
@@ -49,6 +61,7 @@ function ProfilePage() {
     favoriteWebSiteGameLink: currentUser.favoriteWebSiteGameLink,
   });
 
+  // handle profile picture
   useEffect(() => {
     const loadProfilePicture = async () => {
       const picture = await getProfilePictureFromIndexedDB(currentUser.email);
@@ -62,6 +75,7 @@ function ProfilePage() {
     loadProfilePicture();
   }, [currentUser.email]);
 
+  // validate all fields for edit
   const validateField = (name, value) => {
     let alertMessage = "";
     const users = JSON.parse(localStorage.getItem("users")) || [];
@@ -161,6 +175,7 @@ function ProfilePage() {
     return alertMessage === "";
   };
 
+  // update the real time changes in the input
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -212,6 +227,7 @@ function ProfilePage() {
     }
   };
 
+  // cancle the edit changes
   const handleCancelClick = () => {
     setIsEditing(false);
 

@@ -41,6 +41,7 @@ const cities = [
   "Sderot",
 ];
 
+// Save user data to localStorage
 const registerUser = (user) => {
   const users = JSON.parse(localStorage.getItem("users")) || [];
   if (users.some((u) => u.email === user.email)) {
@@ -93,6 +94,7 @@ const RegisterPage = () => {
     setShowDropdown(false);
   };
 
+  // validate all fields in the form
   const validateField = (name, value) => {
     let alertMessage = "";
     const users = JSON.parse(localStorage.getItem("users")) || [];

@@ -194,7 +194,7 @@ function UserRow({ user, onEdit, onDelete, onAlert }) {
     </tr>
   );
 }
-
+// required fields
 UserRow.propTypes = {
   user: PropTypes.shape({
     profilePicture: PropTypes.string,
