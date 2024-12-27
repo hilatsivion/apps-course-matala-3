@@ -12,23 +12,14 @@ import ProfilePage from "./components/ProfilePage/ProfilePage";
 import AdminPage from "./components/AdminPage/AdminPage";
 
 const App = () => {
-  const [currentUser, setCurrentUser] = useState(() => {
-    // Initialize state from sessionStorage
-    const user = sessionStorage.getItem("currentUser");
-    return user ? JSON.parse(user) : null;
-  });
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    // Listener for changes in sessionStorage
-    const handleStorageChange = () => {
-      const user = sessionStorage.getItem("currentUser");
-      setCurrentUser(user ? JSON.parse(user) : null);
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
+    // Load the current user from sessionStorage when the app starts
+    const storedUser = sessionStorage.getItem("currentUser");
+    if (storedUser) {
+      setCurrentUser(JSON.parse(storedUser));
+    }
   }, []);
 
   const ProtectedRoute = ({ children, redirectTo, condition }) => {
@@ -39,7 +30,10 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/login-page" element={<LoginPage />} />
+        <Route
+          path="/login-page"
+          element={<LoginPage setCurrentUser={setCurrentUser} />}
+        />
         <Route path="/register-page" element={<RegisterPage />} />
 
         {/* Protected Profile Page */}

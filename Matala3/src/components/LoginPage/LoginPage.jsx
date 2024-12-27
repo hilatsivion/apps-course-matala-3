@@ -33,7 +33,7 @@ const loginUser = (username, password) => {
   }
 };
 
-const LoginPage = () => {
+const LoginPage = ({ setCurrentUser }) => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -106,6 +106,7 @@ const LoginPage = () => {
         ...result.user,
       };
       sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
+      setCurrentUser(currentUser); // Update the app-level state
 
       if (result.user?.username === "admin") {
         navigate("/admin-page");
@@ -130,7 +131,6 @@ const LoginPage = () => {
           <h1>Login</h1>
           <p>Login to access your account.</p>
           <form onSubmit={handleSubmit}>
-            {/* Username */}
             <div>
               <label>Username</label>
               <input
@@ -147,7 +147,6 @@ const LoginPage = () => {
               )}
             </div>
 
-            {/* Password */}
             <div>
               <label>Password</label>
               <input
