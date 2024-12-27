@@ -29,6 +29,7 @@ const cities = [
 ];
 
 function ProfilePage() {
+  const [proPicture, setPicture] = useState();
   const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
   const [isEditing, setIsEditing] = useState(false);
   const [globalAlert, setGlobalAlert] = useState({ message: "", type: "" });
@@ -40,7 +41,7 @@ function ProfilePage() {
     username: currentUser.username,
     email: currentUser.email,
     dateOfBirth: currentUser.dateOfBirth,
-    profilePicture: currentUser.profilePicture,
+    profilePicture: proPicture,
     password: currentUser.password,
     city: currentUser.city,
     street: currentUser.street,
@@ -55,6 +56,8 @@ function ProfilePage() {
         ...prevData,
         profilePicture: picture || ProfileImagePlaceholder,
       }));
+      setPicture(picture)
+
     };
 
     loadProfilePicture();
@@ -197,12 +200,15 @@ function ProfilePage() {
 
   const handleCancelClick = () => {
     setIsEditing(false);
-    setFormData({
+  
+    setFormData(() => ({
       ...currentUser,
-    });
+      profilePicture: proPicture || ProfileImagePlaceholder, 
+    }));
+  
     setGlobalAlert(null);
   };
-
+  
   return (
     <div className="profile-page">
       <Navbar />
