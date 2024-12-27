@@ -5,6 +5,10 @@
   width: 100%;
 }
 
+.navbar > button {
+  cursor: pointer;
+}
+
 .logo {
   display: flex;
   align-items: center;
