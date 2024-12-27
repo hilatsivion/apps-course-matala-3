@@ -51,14 +51,18 @@ export const saveProfilePictureToIndexedDB = (email, file) => {
       const db = event.target.result;
       if (!db.objectStoreNames.contains("ProfilePictures")) {
         db.createObjectStore("ProfilePictures", { keyPath: "email" });
-        console.log("Object store 'ProfilePictures' created during initial upgrade.");
+        console.log(
+          "Object store 'ProfilePictures' created during initial upgrade."
+        );
       }
     };
 
     initialRequest.onsuccess = (event) => {
       const db = event.target.result;
       if (!db.objectStoreNames.contains("ProfilePictures")) {
-        console.log("Object store 'ProfilePictures' not found. Upgrading database...");
+        console.log(
+          "Object store 'ProfilePictures' not found. Upgrading database..."
+        );
         db.close();
         createOrUpgradeStore(db.version);
       } else {

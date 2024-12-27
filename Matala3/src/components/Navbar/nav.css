@@ -5,11 +5,16 @@
   width: 100%;
 }
 
+.navbar > button {
+  cursor: pointer;
+}
+
 .logo {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   margin-top: 0;
+  cursor: pointer;
 }
 
 .logo h1 {
