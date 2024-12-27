@@ -1,25 +1,28 @@
 export const saveProfilePictureToIndexedDB = (email, file) => {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open("ProfileDB", 2);
+    const openDatabase = (version) => indexedDB.open("ProfileDB", version);
 
-    request.onupgradeneeded = (event) => {
-      const db = event.target.result;
-      if (!db.objectStoreNames.contains("ProfilePictures")) {
-        db.createObjectStore("ProfilePictures", { keyPath: "email" });
-        console.log("Object store 'ProfilePictures' created.");
-      }
+    const createOrUpgradeStore = (currentVersion) => {
+      const newVersion = currentVersion + 1;
+      const upgradeRequest = openDatabase(newVersion);
+
+      upgradeRequest.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        if (!db.objectStoreNames.contains("ProfilePictures")) {
+          db.createObjectStore("ProfilePictures", { keyPath: "email" });
+          console.log("Object store 'ProfilePictures' created during upgrade.");
+        }
+      };
+
+      upgradeRequest.onsuccess = (event) => {
+        console.log("Database upgraded successfully.");
+        saveToStore(event.target.result);
+      };
+
+      upgradeRequest.onerror = (event) => reject(event.target.error);
     };
 
-    request.onsuccess = (event) => {
-      const db = event.target.result;
-
-      if (!db.objectStoreNames.contains("ProfilePictures")) {
-        console.error("Object store 'ProfilePictures' not found!");
-        return reject(
-          new Error("Object store 'ProfilePictures' does not exist.")
-        );
-      }
-
+    const saveToStore = (db) => {
       const reader = new FileReader();
 
       reader.onload = () => {
@@ -39,11 +42,31 @@ export const saveProfilePictureToIndexedDB = (email, file) => {
 
       reader.onerror = () => reject(reader.error);
 
-      // Start reading the file
       reader.readAsDataURL(file);
     };
 
-    request.onerror = (event) => reject(event.target.error);
+    const initialRequest = openDatabase(2);
+
+    initialRequest.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains("ProfilePictures")) {
+        db.createObjectStore("ProfilePictures", { keyPath: "email" });
+        console.log("Object store 'ProfilePictures' created during initial upgrade.");
+      }
+    };
+
+    initialRequest.onsuccess = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains("ProfilePictures")) {
+        console.log("Object store 'ProfilePictures' not found. Upgrading database...");
+        db.close();
+        createOrUpgradeStore(db.version);
+      } else {
+        saveToStore(db);
+      }
+    };
+
+    initialRequest.onerror = (event) => reject(event.target.error);
   });
 };
 
